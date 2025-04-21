@@ -1,20 +1,16 @@
-#include <fmt/format.h>
 #include <cLLM/cLLM.h>
+#include <fmt/format.h>
 
-using namespace greeter;
+using namespace cllm;
 
-Greeter::Greeter(std::string _name) : name(std::move(_name)) {}
+class cLLM::cLLMImpl {
 
-std::string Greeter::greet(LanguageCode lang) const {
-  switch (lang) {
-    default:
-    case LanguageCode::EN:
-      return fmt::format("Hello, {}!", name);
-    case LanguageCode::DE:
-      return fmt::format("Hallo {}!", name);
-    case LanguageCode::ES:
-      return fmt::format("¡Hola {}!", name);
-    case LanguageCode::FR:
-      return fmt::format("Bonjour {}!", name);
-  }
+
+}
+
+cLLM::loadModel(const std::string& modelPath) {
+    // Load the model from the specified path
+    // This is a placeholder implementation
+    fmt::print("Loading model from: {}\n", modelPath);
+    return true;  // Return true if loading is successful
 }

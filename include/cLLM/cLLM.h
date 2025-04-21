@@ -1,31 +1,23 @@
 #pragma once
-
 #include <string>
+#include <memory>
 
-namespace greeter {
+#include "define.h"
 
-  /**  Language codes to be used with the Greeter class */
-  enum class LanguageCode { EN, DE, ES, FR };
+namespace cllm {
 
-  /**
-   * @brief A class for saying hello in multiple languages
-   */
-  class Greeter {
-    std::string name;
-
+  class CLLM_API  cLLM {
   public:
-    /**
-     * @brief Creates a new greeter
-     * @param name the name to greet
-     */
-    Greeter(std::string name);
+    cLLM() = default;
 
-    /**
-     * @brief Creates a localized string containing the greeting
-     * @param lang the language to greet in
-     * @return a string containing the greeting
-     */
-    std::string greet(LanguageCode lang = LanguageCode::EN) const;
+    ~cLLM() = default;
+
+    // Load a model from a file
+    bool loadModel(const std::string& modelPath);
+
+  private:
+    using cLLMImpl = std::unique_ptr<struct cLLMImpl>;
+    cLLMImpl impl;  // Pointer to the implementation details
   };
 
-}  // namespace greeter
+}  // namespace cllm
