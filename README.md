@@ -6,45 +6,41 @@
 [![codecov](https://codecov.io/gh/TheLartians/ModernCppStarter/branch/master/graph/badge.svg)](https://codecov.io/gh/TheLartians/ModernCppStarter)
 
 <p align="center">
-  <img src="documentation/images/android-chrome-512x512.png" height="175" width="auto" />
+  <img src="documentation/images/cLLM_logo.png" height="200" width="250" />
 </p>
 
 # cLLM
 
-LLM inference using pure c and c++, no extra dependencies.
+LLM inference using pure c and c++. The **c** in cLLM means **crack**.
+
+Our goal is to crack the difficulties of LLM and make it available to evryone and everywhere.
 
 ## Features
 
-- [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
-- Suited for single header libraries and projects of any scale
-- Clean separation of library and executable code
-- Integrated test suite
-- Continuous integration via [GitHub Actions](https://help.github.com/en/actions/)
-- Code coverage via [codecov](https://codecov.io)
-- Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
-- Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
-- Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
-- Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
-- Support for [sanitizer tools, and more](#additional-tools)
+We support the following features:
+
+
+## Models
+
+### Large language models
+
+|Model|Parameters|Status|
+|---|---|---|
+|Qwen|1.8B| ![](https://img.shields.io/badge/开发中-yellow)|
+|    |7B| ![](https://img.shields.io/badge/待处理-lightgrey)|
+|    |14B|![](https://img.shields.io/badge/待处理-lightgrey)|
+| DeepSeek |7B|![](https://img.shields.io/badge/待处理-lightgrey)|
+| DeepSeek |67B|![](https://img.shields.io/badge/待处理-lightgrey)|
+| Llama |7B|![](https://img.shields.io/badge/待处理-lightgrey)|
+
+
+### Large vision models
+
+
 
 ## Usage
 
-### Adjust the template to your needs
-
-- Use this repo [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template).
-- Replace all occurrences of "Greeter" in the relevant CMakeLists.txt with the name of your project
-  - Capitalization matters here: `Greeter` means the name of the project, while `greeter` is used in file names.
-  - Remember to rename the `include/greeter` directory to use your project's lowercase name and update all relevant `#include`s accordingly.
-- Replace the source files with your own
-- For header-only libraries: see the comments in [CMakeLists.txt](CMakeLists.txt)
-- Add [your project's codecov token](https://docs.codecov.io/docs/quick-start) to your project's github secrets under `CODECOV_TOKEN`
-- Happy coding!
-
-Eventually, you can remove any unused files, such as the standalone directory or irrelevant github workflows for your project.
-Feel free to replace the License with one suited for your project.
-
-To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories. 
-During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+### Requirements
 
 ### Build and run the standalone target
 
@@ -201,6 +197,10 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 - [**cpp-best-practices/gui_starter_template**](https://github.com/cpp-best-practices/gui_starter_template/): A popular C++ starter project, created in 2017.
 - [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
 - [**vector-of-bool/pitchfork**](https://github.com/vector-of-bool/pitchfork/): Pitchfork is a Set of C++ Project Conventions.
+
+## References
+
+
 
 ## Star History
 
