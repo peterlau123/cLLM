@@ -6,7 +6,7 @@ namespace cllm {
 
   class EngineImpl {
   public:
-    EngineImpl()=default;
+    EngineImpl() = default;
 
     bool init();
   };

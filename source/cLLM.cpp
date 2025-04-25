@@ -1,23 +1,22 @@
-#include "cLLM/cLLM-cpp.h"
-
 #include <fmt/format.h>
 
 #include "EngineImpl.h"
+#include "cLLM/cLLM-cpp.h"
 
 namespace cllm {
 
   bool Engine::init() {
     bool ret = false;
 
-    if(nullptr==impl_){
-      impl_=std::make_unique<EngineImpl>();
-      if(impl_->init()){
+    if (nullptr == impl_) {
+      impl_ = std::make_unique<EngineImpl>();
+      if (impl_->init()) {
         ret = true;
         fmt::print("Engine initialized successfully.\n");
-      }else{
-       fmt::print("Engine initialization failed.\n");
+      } else {
+        fmt::print("Engine initialization failed.\n");
       }
-    }else{
+    } else {
       fmt::print("Engine already initialized.\n");
       ret = false;
     }

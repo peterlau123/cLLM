@@ -2,11 +2,6 @@
 
 namespace cllm {
 
-EngineImpl::init(){
+  EngineImpl::init() {}
 
-
-
-}
-
-
-}
+}  // namespace cllm
