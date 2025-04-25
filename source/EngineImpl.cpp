@@ -2,6 +2,10 @@
 
 namespace cllm {
 
-  EngineImpl::init() {}
+  bool EngineImpl::init() {
+    bool ret = false;
+
+    return ret;
+  }
 
 }  // namespace cllm

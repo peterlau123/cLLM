@@ -32,6 +32,17 @@ CPMAddPackage(
   GITHUB_REPOSITORY fmtlib/fmt
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
+include(cmake/CPM.cmake)
+
+CPMAddPackage(
+  NAME GTest
+  GITHUB_REPOSITORY google/googletest
+  GIT_TAG main  # 或者使用特定版本，如 release-1.12.1
+  VERSION 1.12.1
+  OPTIONS
+    "INSTALL_GTEST OFF"
+    "BUILD_GMOCK ON"
+)
 
 # ---- Add source files ----
 
@@ -40,11 +51,15 @@ CPMAddPackage(
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 
+# -- build settings ---
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
 # ---- Create library ----
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME} ${headers} ${sources})
+add_library(${PROJECT_NAME} SHARED ${headers} ${sources})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
@@ -64,6 +79,12 @@ target_include_directories(
 # the location where the project's version header will be placed should match the project's regular
 # header paths
 string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+
+# 设置默认安装路径
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "默认安装路径" FORCE)
+    message(STATUS "设置安装路径为: ${CMAKE_INSTALL_PREFIX}")
+endif()
 
 packageProject(
   NAME ${PROJECT_NAME}
