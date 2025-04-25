@@ -1,3 +1,12 @@
 #include "EngineImpl.h"
 
-namespace cllm {}
+namespace cllm {
+
+EngineImpl::init(){
+
+
+
+}
+
+
+}
