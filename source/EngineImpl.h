@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 
-#include "model/model.h"
+#include "parser.h"
+#include "pipeline.h"
 
 namespace cllm {
 
@@ -9,6 +11,14 @@ namespace cllm {
     EngineImpl() = default;
 
     bool init();
+
+    void parse(const std::string& modelPath);
+
+    std::string chat(const std::string& prompt);
+
+  private:
+    ParserPtr parser_;
+    PipelinePtr pipeline_;
   };
 
 }  // namespace cllm

@@ -30,4 +30,10 @@ namespace cllm {
     return true;  // Return true if loading is successful
   }
 
+  std::string Engine::chat(const std::string& prompt) {
+    // Placeholder implementation for chat functionality
+    fmt::print("Chatting with prompt: {}\n", prompt);
+    return "Response from model";  // Return a dummy response
+  }
+
 }  // namespace cllm

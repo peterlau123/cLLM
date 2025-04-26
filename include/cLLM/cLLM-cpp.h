@@ -16,7 +16,9 @@ namespace cllm {
     bool init();
 
     // Load a model from a file
-    bool loadModel(const std::string& modelPath);
+    bool parse(const std::string& modelPath);
+
+    std::string chat(const std::string& prompt);
 
   private:
     using EngineImplPtr = std::unique_ptr<class EngineImpl>;
