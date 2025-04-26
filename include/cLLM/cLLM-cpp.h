@@ -3,7 +3,7 @@
 #include <string>
 
 #include "config.h"
-#include "util/macros.h"
+#include "utils/macros.h"
 
 namespace cllm {
   class EngineImpl;

@@ -12,11 +12,12 @@ namespace cllm {
 
     bool init();
 
-    void parse(const std::string& modelPath);
+    bool parse(const std::string& modelPath);
 
     std::string chat(const std::string& prompt);
 
   private:
+    std::vector<std::string> history_;
     ParserPtr parser_;
     PipelinePtr pipeline_;
   };

@@ -1,11 +1,13 @@
 #pragma once
+#include "../utils/template.hpp"
 
 namespace cllm {
 
-  class Qwen {};
+  class QwenModel {};
+  DEFINE_SHARED_PTR(QwenModel);
 
-  class DeepSeek {};
+  class DeepSeekModel {};
 
-  class Llama {};
+  class LlamaModel {};
 
 }  // namespace cllm
