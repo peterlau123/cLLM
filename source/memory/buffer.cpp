@@ -1,14 +1,28 @@
 #include "buffer.h"
 
+#include "../utils/macros.h"
+
 namespace cllm {
 
-  Buffer::Buffer(size_t size) : data_(nullptr), size_(0) { resize(size); }
+  void Buffer::alloc(size_t size) {
+    data_ = new char[size];
+    size_ = size;
+  }
 
-  Buffer::Buffer(void* data, size_t size, Deleter deleter)
-      : data_(data), size_(size), deleter_(deleter) {
-    if (size == 0) {
-      throw std::invalid_argument("Buffer size cannot be zero");
-    }
+  void Buffer::dealloc() {
+    deletor_(data_);
+    data_ = nullptr;
+    size_ = 0;
+  }
+
+  Buffer::Buffer(size_t size) : data_(nullptr), size_(0) {
+    ASSERT(0 < size_, "Buffer size cannot be zero");
+    resize(size);
+  }
+
+  Buffer::Buffer(void* data, size_t size, Deletor deleter)
+      : data_(data), size_(size), deletor_(deleter) {
+    ASSERT(0 < size_, "Buffer size cannot be zero");
     is_extern_ = true;
   }
 
@@ -31,15 +45,12 @@ namespace cllm {
 
   void* Buffer::get() const { return data_; }
   void* Buffer::get(size_t offset) const {
-    if (offset >= size_) {
-      throw std::out_of_range("Offset exceeds buffer size");
-    }
+    ASSERT(size_ < offset, "offset cannot exceed Buffer size");
     return static_cast<char*>(data_) + offset;
   }
   void* Buffer::get(size_t offset, size_t size) const {
-    if (offset + size > size_) {
-      throw std::out_of_range("Offset and size exceed buffer size");
-    }
+    ASSERT(size_ < offset, "offset and size cannot exceed Buffer size");
+
     return static_cast<char*>(data_) + offset;
   }
 

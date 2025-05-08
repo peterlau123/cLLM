@@ -37,7 +37,7 @@ namespace {
   }
   void dealloc_on_cpu(void** data) {
     if (*data) {
-      delete[] * data;
+      delete[] *data;
       *data = nullptr;
     }
   }
@@ -75,7 +75,8 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   }
 
   if (DeviceType::GPU == device_) {
-    { /* code */ }
+    { /* code */
+    }
 
     if (DeviceType::METAL == device_) {
       /* code */

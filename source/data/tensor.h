@@ -31,7 +31,7 @@ namespace cllm {
 
     Tensor& operator=(const Tensor& other) = default;
 
-    //operations
+    // operations
 
     // attributes
     int dim(int idx) const;
