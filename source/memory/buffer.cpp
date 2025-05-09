@@ -1,11 +1,15 @@
 #include "buffer.h"
 
 #include "../utils/macros.h"
+#include "allocator.h"
 
 namespace cllm {
 
   void Buffer::alloc(size_t size) {
-    data_ = new char[size];
+    data_ = allocator_->alloc(size);
+    if (data_ == nullptr) {
+      throw std::bad_alloc();
+    }
     size_ = size;
   }
 

@@ -3,6 +3,8 @@
 #include <functional>
 
 namespace cllm {
+  class Allocator;
+  using AllocatorPtr = std::shared_ptr<Allocator>;
   class Buffer {
   public:
     struct DefaultDeleter {
@@ -41,14 +43,14 @@ namespace cllm {
     size_t size_;
     Deletor deletor_;
     bool is_extern_;
-
+    AllocatorPtr allocator_;
     void alloc(size_t size);
 
     void dealloc();
 
-    Buffer(const Buffer&) = delete;            // Disable copy constructor
-    Buffer& operator=(con; Buffer&) = delete;  // Disable copy assignment
-    Buffer(Buffer&&) = delete;                 // Disable move constructor
-    Buffer& operator=(Buffer&&) = delete;      // Disable move assignment
+    Buffer(const Buffer&) = delete;             // Disable copy constructor
+    Buffer& operator=(const Buffer&) = delete;  // Disable copy assignment
+    Buffer(Buffer&&) = delete;                  // Disable move constructor
+    Buffer& operator=(Buffer&&) = delete;       // Disable move assignment
   };
 }  // namespace cllm

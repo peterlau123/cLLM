@@ -13,7 +13,7 @@ if [ ! -d ../cllm_build ]; then
     mkdir ../cllm_build
 else
     echo "Build directory already exists. Clean ../cllm_build first."
-    rm -r ../cllm_build/*
+    rm -rf ../cllm_build/*
 fi 
 
 

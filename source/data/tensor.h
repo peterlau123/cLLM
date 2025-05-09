@@ -23,7 +23,7 @@ namespace cllm {
     };
     enum class DeviceType { UNKNOWN = -1, CPU, GPU, METAL, TOTAL };
     // Constructor
-    Tensor() : dim_sz_(0), data_(nullptr), size_(0) {}
+    Tensor() : dim_sz_(0), buffer_(0), size_(0) {}
 
     Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType device = DeviceType::CPU);
 
