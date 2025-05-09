@@ -29,26 +29,7 @@ include(cmake/CPM.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
-CPMAddPackage(
-  NAME fmt
-  GIT_TAG 10.2.1
-  GITHUB_REPOSITORY fmtlib/fmt
-  OPTIONS "FMT_INSTALL YES" # create an installable target
-)
-
-if(CLLLM_BUILD_TESTS)
-  CPMAddPackage(
-    NAME GTest
-    GITHUB_REPOSITORY google/googletest
-    GIT_TAG main  # 或者使用特定版本，如 release-1.12.1
-    VERSION 1.12.1
-    OPTIONS
-      "INSTALL_GTEST OFF"
-      "BUILD_GMOCK ON"
-  )
-endif()
-
-#TODO: Add NanoLog package
+include(cmake/CPMDependency.cmake)
 
 # ---- Add source files ----
 
