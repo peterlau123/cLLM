@@ -36,7 +36,7 @@ CPMAddPackage(
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 
-if(ENABLE_UNIT_TESTS)
+if(CLLLM_BUILD_TESTS)
   CPMAddPackage(
     NAME GTest
     GITHUB_REPOSITORY google/googletest
@@ -48,7 +48,7 @@ if(ENABLE_UNIT_TESTS)
   )
 endif()
 
-
+#TODO: Add NanoLog package
 
 # ---- Add source files ----
 

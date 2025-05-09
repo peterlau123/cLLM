@@ -6,7 +6,7 @@
 namespace cllm {
 
   void Buffer::alloc(size_t size) {
-    data_ = allocator_->alloc(size);
+    allocator_->alloc(size, &data_);
     if (data_ == nullptr) {
       throw std::bad_alloc();
     }
@@ -14,7 +14,7 @@ namespace cllm {
   }
 
   void Buffer::dealloc() {
-    deletor_(data_);
+    deletor_(&data_);
     data_ = nullptr;
     size_ = 0;
   }

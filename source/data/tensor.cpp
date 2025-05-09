@@ -39,7 +39,7 @@ namespace {
   }
   void dealloc_on_cpu(void** data) {
     if (*data) {
-      delete[] * data;
+      delete[] *data;
       *data = nullptr;
     }
   }
