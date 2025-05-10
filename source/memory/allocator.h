@@ -5,7 +5,7 @@
 
 namespace cllm {
 class Allocator {
-public:
+ public:
   Allocator() = default;
   virtual ~Allocator() = default;
 
@@ -17,10 +17,11 @@ public:
   virtual void alloc(int size, void** data) = 0;
   virtual void dealloc(void** data) = 0;
 };
+
 using AllocatorPtr = std::shared_ptr<Allocator>;
 
 class CPUAllocator : public Allocator {
-public:
+ public:
   CPUAllocator();
   ~CPUAllocator() override;
   void alloc(int size, void** data) override;
@@ -28,7 +29,7 @@ public:
 };
 
 class GPUAllocator : public Allocator {
-public:
+ public:
   GPUAllocator();
   ~GPUAllocator() override;
   void alloc(int size, void** data) override;

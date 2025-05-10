@@ -7,8 +7,9 @@
 
 namespace cllm {
 class EngineImpl;
+
 class CLLM_API Engine {
-public:
+ public:
   Engine() = default;
 
   ~Engine() = default;
@@ -20,7 +21,7 @@ public:
 
   std::string chat(const std::string& prompt);
 
-private:
+ private:
   using EngineImplPtr = std::unique_ptr<class EngineImpl>;
   EngineImplPtr impl_;  // Pointer to the implementation details
 };

@@ -5,6 +5,7 @@ template <typename T>
 struct SharedPtrWrapper {
   using Type = std::shared_ptr<T>;
 };
+
 #define DEFINE_SHARED_PTR(X) using X##Ptr = SharedPtrWrapper<X>::Type
 
 template <typename T>

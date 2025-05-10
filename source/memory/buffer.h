@@ -7,20 +7,22 @@
 
 namespace cllm {
 class Buffer {
-public:
+ public:
   struct DefaultDeletor {
     void operator()(void** data) {}
   };
+
   using Deleter = std::function<void(void**)>;
   using BufferPtr = std::shared_ptr<Buffer>;
 
-
   class Builder {
-  public:
+   public:
     static BufferPtr build(DeviceType device_type) { return std::make_shared<Buffer>(device_type); }
+
     static BufferPtr build(DeviceType device_type, size_t size) {
       return std::make_shared<Buffer>(device_type, size);
     }
+
     static BufferPtr build(DeviceType device_type,
                            void* data,
                            size_t size,
@@ -53,7 +55,7 @@ public:
 
   Buffer(DeviceType device_type, void* data, size_t size, Deleter deleter = DefaultDeletor());
 
-private:
+ private:
   DeviceType device_type_;
   void* data_;
   size_t size_;  // in bytes
@@ -69,5 +71,6 @@ private:
   Buffer(Buffer&&) = delete;                  // Disable move constructor
   Buffer& operator=(Buffer&&) = delete;       // Disable move assignment
 };
+
 using BufferPtr = Buffer::BufferPtr;
 }  // namespace cllm

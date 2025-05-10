@@ -9,7 +9,7 @@ bool EngineImpl::init() {
 }
 
 bool EngineImpl::parse(const std::string& modelPath) {
-  bool ret{true};
+  bool ret {true};
   // map model file to cpu memory
 
   // load weights for tokenizer and model

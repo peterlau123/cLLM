@@ -5,7 +5,7 @@ namespace cllm {
 namespace Env {
 
 class Environment {
-public:
+ public:
   Environment() = default;
 
   void check();

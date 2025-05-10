@@ -1,45 +1,29 @@
 ---
 Language: Cpp
-# 基础样式
 BasedOnStyle: Google
 
-# 访问说明符的偏移（public/private 等）
-AccessModifierOffset: -2
-
-# 行间距相关
+# 增加行间距
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 2
+SeparateDefinitionBlocks: Always
 
-# 大括号换行样式
-BraceWrapping:
-  AfterClass: false
-  AfterControlStatement: false
-  AfterEnum: false
-  AfterFunction: false
-  AfterNamespace: false
-  AfterStruct: false
-  AfterUnion: false
-  BeforeCatch: false
-  BeforeElse: false
-  IndentBraces: false
-
-# 缩进宽度
+# 基础缩进配置
 IndentWidth: 2
 ContinuationIndentWidth: 4
-
-# 行长度
 ColumnLimit: 100
 
-# 在赋值操作符前后添加空格
-SpaceBeforeAssignmentOperators: true
-
-# 函数参数的格式化
-BinPackParameters: false
+# 函数参数和初始化列表格式
 BinPackArguments: false
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: BeforeComma
 
-# 在空括号中添加空格
-SpaceInEmptyParentheses: false
-
-# 指针和引用的对齐
-DerivePointerAlignment: false
-PointerAlignment: Left
+# 空格和对齐
+SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeCpp11BracedList: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false

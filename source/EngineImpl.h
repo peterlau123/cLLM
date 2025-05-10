@@ -8,7 +8,7 @@
 namespace cllm {
 
 class EngineImpl {
-public:
+ public:
   EngineImpl() = default;
 
   bool init();
@@ -17,7 +17,7 @@ public:
 
   std::string chat(const std::string& prompt);
 
-private:
+ private:
   std::vector<std::string> history_;
   ParserPtr parser_;
   PipelinePtr pipeline_;

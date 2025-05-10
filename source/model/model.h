@@ -4,6 +4,7 @@
 namespace cllm {
 
 class QwenModel {};
+
 DEFINE_SHARED_PTR(QwenModel);
 
 class DeepSeekModel {};

@@ -32,11 +32,12 @@ uint64_t getByteSize(Tensor::DataType dtype) {
 }  // namespace
 
 Tensor::Tensor()
-    : dims_(),
-      buffer_(nullptr),
-      size_(0),
-      dtype_(DataType::UNKNOWN),
-      device_(DeviceType::UNKNOWN) {}
+    : dims_()
+    , buffer_(nullptr)
+    , size_(0)
+    , dtype_(DataType::UNKNOWN)
+    , device_(DeviceType::UNKNOWN) {}
+
 Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType device)
     : dims_(dims), size_(0), dtype_(dtype), device_(device) {
   // Check if the dimensions are valid

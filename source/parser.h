@@ -6,6 +6,7 @@
 namespace cllm {
 
 class Parser {};
+
 DEFINE_SHARED_PTR(Parser);
 
 }  // namespace cllm

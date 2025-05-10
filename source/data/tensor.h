@@ -1,5 +1,4 @@
 #pragma once
-
 #include <cstdint>
 #include <vector>
 
@@ -7,7 +6,7 @@
 
 namespace cllm {
 class Tensor {
-public:
+ public:
   enum class DataType {
     UNKNOWN = -1,
     INT8,
@@ -21,6 +20,12 @@ public:
     BOOL,
     TOTAL
   };
+
+  struct DefaultDeletor {
+    void operator()(void** data) {}
+  };
+
+  using Deleter = std::function<void(void**)>;
   // Constructor
   Tensor();
 
@@ -30,7 +35,7 @@ public:
          const std::vector<uint32_t>& dims,
          DataType dtype,
          DeviceType device,
-         Buffer::Deleter deleter = Buffer::DefaultDeletor());
+         Deleter deleter = DefaultDeletor());
 
   Tensor(const BufferPtr& buffer_ptr);
 
@@ -51,7 +56,7 @@ public:
 
   ~Tensor();
 
-private:
+ private:
   std::vector<uint32_t> dims_;
   int size_;  // element number
   BufferPtr buffer_;

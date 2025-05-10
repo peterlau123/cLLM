@@ -7,7 +7,7 @@
 namespace cllm {
 
 class Pipeline {
-public:
+ public:
   Pipeline() = default;
 
   virtual ~Pipeline() = default;
@@ -15,10 +15,11 @@ public:
   // Add methods for pipeline processing
   virtual void process() = 0;
 };
+
 using PipelinePtr = std::shared_ptr<Pipeline>;
 
 class Qwenpipeline : public Pipeline {
-public:
+ public:
   Qwenpipeline() = default;
 
   ~Qwenpipeline() override = default;
@@ -27,7 +28,7 @@ public:
     // Implement the processing logic for Qwen pipeline
   }
 
-private:
+ private:
   QwenModelPtr qwen_model_;
   Tokenizer tokenizer_;
 };
