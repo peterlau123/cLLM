@@ -5,49 +5,34 @@
 using namespace cllm;
 
 namespace {
-  // TODO: ADD OOM avoidance
-  void alloc_on_cpu(Tensor::DataType dtype, int size, void** data) {
-    *data = nullptr;
-    switch (dtype) {
-      case Tensor::DataType::INT8:
-        *data = new int8_t[size];
-      case Tensor::DataType::UINT8:
-        *data = new uint8_t[size];
-      case Tensor::DataType::INT16:
-        *data = new int16_t[size];
-      case Tensor::DataType::UINT16:
-        *data = new uint16_t[size];
-        break;
-      case Tensor::DataType::INT32:
-        *data = new int32_t[size];
-        break;
-      case Tensor::DataType::UINT32:
-        *data = new uint32_t[size];
-        break;
-      case Tensor::DataType::FLOAT32:
-        *data = new float[size];
-        break;
-      case Tensor::DataType::FLOAT64:
-        *data = new double[size];
-        break;
-      case Tensor::DataType::BOOL:
-        *data = new bool[size];
-        break;
-      default:
-        throw std::invalid_argument("Unsupported data type");
-    }
+
+uint64_t getByteSize(Tensor::DataType dtype) {
+  switch (dtype) {
+    case Tensor::DataType::INT8:
+    case Tensor::DataType::UINT8:
+      return sizeof(uint8_t);
+    case Tensor::DataType::INT16:
+    case Tensor::DataType::UINT16:
+      return sizeof(uint16_t);
+    case Tensor::DataType::INT32:
+    case Tensor::DataType::UINT32:
+      return sizeof(uint32_t);
+    case Tensor::DataType::FLOAT32:
+      return sizeof(float);
+    case Tensor::DataType::FLOAT64:
+      return sizeof(double);
+    case Tensor::DataType::BOOL:
+      return sizeof(bool);
+    default:
+      ASSERT(false, "Unsupported data type");
+      return 0;
   }
-  void dealloc_on_cpu(void** data) {
-    if (*data) {
-      delete[] *data;
-      *data = nullptr;
-    }
-  }
+}
 
 }  // namespace
 
 Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType device)
-    : dims_(dims), dim_sz_(dims.size()), buffer_(0), size_(0), dtype_(dtype), device_(device) {
+    : dims_(dims), dim_sz_(dims.size()), size_(0), dtype_(dtype), device_(device) {
   // Check if the dimensions are valid
   ASSERT(!dims.empty(), "Tensor dimensions cannot be empty");
   for (const auto& dim : dims) {
@@ -62,15 +47,6 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   for (const auto& dim : dims_) {
     size_ *= dim;
   }
-
-  // Allocate memory for the tensor data based on the data type
-  if (DeviceType::CPU == device_) {
-  }
-
-  if (DeviceType::GPU == device_) {
-  }
-
-  if (DeviceType::METAL == device_) {
-    /* code */
-  }
+  buffer_ = Buffer::Builder::build(device, size_ * getByteSize(dtype));
+  ASSERT(buffer_ != nullptr, "Failed to allocate buffer");
 }

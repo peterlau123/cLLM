@@ -2,15 +2,15 @@
 
 namespace cllm {
 
-  namespace Env {
+namespace Env {
 
-    class Environment {
-    public:
-      Environment() = default;
+class Environment {
+public:
+  Environment() = default;
 
-      void check();
-    };
+  void check();
+};
 
-  }  // namespace Env
+}  // namespace Env
 
 }  // namespace cllm

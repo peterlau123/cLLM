@@ -2,6 +2,6 @@
 
 namespace cllm {
 
-  class Tokenizer {};
+class Tokenizer {};
 
 }  // namespace cllm

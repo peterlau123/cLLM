@@ -3,11 +3,11 @@
 
 namespace cllm {
 
-  class QwenModel {};
-  DEFINE_SHARED_PTR(QwenModel);
+class QwenModel {};
+DEFINE_SHARED_PTR(QwenModel);
 
-  class DeepSeekModel {};
+class DeepSeekModel {};
 
-  class LlamaModel {};
+class LlamaModel {};
 
 }  // namespace cllm

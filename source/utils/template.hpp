@@ -1,11 +1,13 @@
 #pragma once
 #include <memory>
 
-template <typename T> struct SharedPtrWrapper {
+template <typename T>
+struct SharedPtrWrapper {
   using Type = std::shared_ptr<T>;
 };
 #define DEFINE_SHARED_PTR(X) using X##Ptr = SharedPtrWrapper<X>::Type
 
-template <typename T> struct UniquePtrWrapper {
+template <typename T>
+struct UniquePtrWrapper {
   using Type = std::unique_ptr<T>;
 };

@@ -7,20 +7,20 @@
 
 namespace cllm {
 
-  class EngineImpl {
-  public:
-    EngineImpl() = default;
+class EngineImpl {
+public:
+  EngineImpl() = default;
 
-    bool init();
+  bool init();
 
-    bool parse(const std::string& modelPath);
+  bool parse(const std::string& modelPath);
 
-    std::string chat(const std::string& prompt);
+  std::string chat(const std::string& prompt);
 
-  private:
-    std::vector<std::string> history_;
-    ParserPtr parser_;
-    PipelinePtr pipeline_;
-  };
+private:
+  std::vector<std::string> history_;
+  ParserPtr parser_;
+  PipelinePtr pipeline_;
+};
 
 }  // namespace cllm
