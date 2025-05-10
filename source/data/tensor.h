@@ -21,7 +21,6 @@ namespace cllm {
       BOOL,
       TOTAL
     };
-    enum class DeviceType { UNKNOWN = -1, CPU, GPU, METAL, TOTAL };
     // Constructor
     Tensor() : dim_sz_(0), buffer_(0), size_(0) {}
 

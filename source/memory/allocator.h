@@ -17,6 +17,8 @@ namespace cllm {
 
   class CPUAllocator : public Allocator {
   public:
+    CPUAllocator();
+    ~CPUAllocator() override;
     void alloc(int size, void** data) override;
     void dealloc(void** data) override;
   };

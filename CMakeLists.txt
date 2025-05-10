@@ -91,5 +91,5 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}
   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 10.2.1;GTest 1.12.1"
+  DEPENDENCIES "fmt 10.2.1;GTest 1.12.1;spdlog 1.12.0" # 这里添加你需要的依赖项
 )

@@ -20,11 +20,13 @@ endif()
 
 
 # 添加 spdlog
-CPMAddPackage(
-    NAME spdlog
-    GITHUB_REPOSITORY gabime/spdlog
-    VERSION 1.12.0
-    OPTIONS
-        "SPDLOG_BUILD_SHARED OFF"
-        "SPDLOG_BUILD_EXAMPLE OFF"
-)
+if(CLLM_LOGGING)
+  CPMAddPackage(
+      NAME spdlog
+      GITHUB_REPOSITORY gabime/spdlog
+      VERSION 1.12.0
+      OPTIONS
+          "SPDLOG_BUILD_SHARED OFF"
+          "SPDLOG_BUILD_EXAMPLE OFF"
+  )
+endif()

@@ -5,6 +5,12 @@
 
 namespace cllm {
 
+  Buffer::Buffer(DeviceType device_type)
+      : device_type_(device_type), data_(nullptr), size_(0), is_extern_(false) {
+    allocator_ = std::make_shared<CPUAllocator>();
+    deletor_ = DefaultDeleter();
+  }
+
   void Buffer::alloc(size_t size) {
     allocator_->alloc(size, &data_);
     if (data_ == nullptr) {
@@ -19,13 +25,14 @@ namespace cllm {
     size_ = 0;
   }
 
-  Buffer::Buffer(size_t size) : data_(nullptr), size_(0) {
+  Buffer::Buffer(DeviceType device_type, size_t size)
+      : device_type_(device_type), data_(nullptr), size_(0) {
     ASSERT(0 < size_, "Buffer size cannot be zero");
     resize(size);
   }
 
-  Buffer::Buffer(void* data, size_t size, Deletor deleter)
-      : data_(data), size_(size), deletor_(deleter) {
+  Buffer::Buffer(DeviceType device_type, void* data, size_t size, Deletor deleter)
+      : device_type_(device_type), data_(data), size_(size), deletor_(deleter) {
     ASSERT(0 < size_, "Buffer size cannot be zero");
     is_extern_ = true;
   }
@@ -40,6 +47,7 @@ namespace cllm {
   }
 
   void* Buffer::data() const { return data_; }
+
   size_t Buffer::size() const { return size_; }
 
   void Buffer::clear() {
@@ -48,10 +56,12 @@ namespace cllm {
   }
 
   void* Buffer::get() const { return data_; }
+
   void* Buffer::get(size_t offset) const {
     ASSERT(size_ < offset, "offset cannot exceed Buffer size");
     return static_cast<char*>(data_) + offset;
   }
+
   void* Buffer::get(size_t offset, size_t size) const {
     ASSERT(size_ < offset, "offset and size cannot exceed Buffer size");
 
