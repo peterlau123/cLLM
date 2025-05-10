@@ -3,24 +3,27 @@
 #include <string>
 
 #include "config.h"
-#include "util/macros.h"
+#include "utils/macros.h"
 
 namespace cllm {
-  class EngineImpl;
-  class CLLM_API Engine {
-  public:
-    Engine() = default;
+class EngineImpl;
 
-    ~Engine() = default;
+class CLLM_API Engine {
+ public:
+  Engine() = default;
 
-    bool init();
+  ~Engine() = default;
 
-    // Load a model from a file
-    bool loadModel(const std::string& modelPath);
+  bool init();
 
-  private:
-    using EngineImplPtr = std::unique_ptr<class EngineImpl>;
-    EngineImplPtr impl_;  // Pointer to the implementation details
-  };
+  // Load a model from a file
+  bool parse(const std::string& modelPath);
+
+  std::string chat(const std::string& prompt);
+
+ private:
+  using EngineImplPtr = std::unique_ptr<class EngineImpl>;
+  EngineImplPtr impl_;  // Pointer to the implementation details
+};
 
 }  // namespace cllm
