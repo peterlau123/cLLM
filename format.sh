@@ -4,7 +4,7 @@
 DIRECTORIES=("include" "source" "standalone" "test")
 
 # Find all C++ source and header files in the specified directories
-FILES=$(find "${DIRECTORIES[@]}" -type f \( -name "*.cpp" -o -name "*.h" \) 2>/dev/null)
+FILES=$(find "${DIRECTORIES[@]}" -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.cu" -o -name "*.cuh" \) 2>/dev/null)
 
 # Check if any files are found
 if [ -z "$FILES" ]; then
