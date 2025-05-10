@@ -1,16 +1,45 @@
 ---
-  BasedOnStyle: Google
-  AccessModifierOffset: '-2'
-  AlignTrailingComments: 'true'
-  AllowAllParametersOfDeclarationOnNextLine: 'false'
-  AlwaysBreakTemplateDeclarations: 'No'
-  BreakBeforeBraces: Attach
-  ColumnLimit: '100'
-  ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
-  IncludeBlocks: Regroup
-  IndentPPDirectives: AfterHash
-  IndentWidth: '2'
-  NamespaceIndentation: All
-  BreakBeforeBinaryOperators: All
-  BreakBeforeTernaryOperators: 'true'
-...
+Language: Cpp
+# 基础样式
+BasedOnStyle: Google
+
+# 访问说明符的偏移（public/private 等）
+AccessModifierOffset: -2
+
+# 行间距相关
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 2
+
+# 大括号换行样式
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+
+# 缩进宽度
+IndentWidth: 2
+ContinuationIndentWidth: 4
+
+# 行长度
+ColumnLimit: 100
+
+# 在赋值操作符前后添加空格
+SpaceBeforeAssignmentOperators: true
+
+# 函数参数的格式化
+BinPackParameters: false
+BinPackArguments: false
+
+# 在空括号中添加空格
+SpaceInEmptyParentheses: false
+
+# 指针和引用的对齐
+DerivePointerAlignment: false
+PointerAlignment: Left

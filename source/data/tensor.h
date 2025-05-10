@@ -22,27 +22,42 @@ public:
     TOTAL
   };
   // Constructor
-  Tensor() : dim_sz_(0), buffer_(nullptr), size_(0) {}
+  Tensor();
 
   Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType device = DeviceType::CPU);
+
+  Tensor(const void* data,
+         const std::vector<uint32_t>& dims,
+         DataType dtype,
+         DeviceType device,
+         Buffer::Deleter deleter = Buffer::DefaultDeletor());
+
+  Tensor(const BufferPtr& buffer_ptr);
 
   Tensor(const Tensor& other);
 
   Tensor& operator=(const Tensor& other);
 
+
   // operations
+  Tensor& operator*(const Tensor& rhs);
+
+  Tensor& operator+(const Tensor& rhs);
 
   // attributes
   int dim(int idx) const;
+
   int size() const { return size_; }
+
+  ~Tensor();
 
 private:
   std::vector<uint32_t> dims_;
-  int dim_sz_;
+  int size_;  // element number
   BufferPtr buffer_;
-  int size_;
-  // Add other tensor properties and methods as needed
   DataType dtype_;
   DeviceType device_;
+
+  int ref_count_;  // TODO: add ref count
 };
 }  // namespace cllm

@@ -8,7 +8,7 @@ namespace cllm {
 Buffer::Buffer(DeviceType device_type)
     : device_type_(device_type), data_(nullptr), size_(0), is_extern_(false) {
   allocator_ = std::make_shared<CPUAllocator>();
-  deletor_ = DefaultDeleter();
+  deleter_ = DefaultDeletor();
 }
 
 void Buffer::alloc(size_t size) {
@@ -20,7 +20,7 @@ void Buffer::alloc(size_t size) {
 }
 
 void Buffer::dealloc() {
-  deletor_(&data_);
+  deleter_(&data_);
   data_ = nullptr;
   size_ = 0;
 }
@@ -31,8 +31,8 @@ Buffer::Buffer(DeviceType device_type, size_t size)
   resize(size);
 }
 
-Buffer::Buffer(DeviceType device_type, void* data, size_t size, Deletor deleter)
-    : device_type_(device_type), data_(data), size_(size), deletor_(deleter) {
+Buffer::Buffer(DeviceType device_type, void* data, size_t size, Deleter deleter)
+    : device_type_(device_type), data_(data), size_(size), deleter_(deleter) {
   ASSERT(0 < size_, "Buffer size cannot be zero");
   is_extern_ = true;
 }

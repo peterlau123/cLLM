@@ -8,16 +8,12 @@
 namespace cllm {
 class Buffer {
 public:
-  struct DefaultDeleter {
-    void operator()(void** data) {
-      if (*data) {
-        delete[] static_cast<char*>(*data);
-        *data = nullptr;
-      }
-    }
+  struct DefaultDeletor {
+    void operator()(void** data) {}
   };
-  using Deletor = std::function<void(void**)>;
+  using Deleter = std::function<void(void**)>;
   using BufferPtr = std::shared_ptr<Buffer>;
+
 
   class Builder {
   public:
@@ -28,8 +24,8 @@ public:
     static BufferPtr build(DeviceType device_type,
                            void* data,
                            size_t size,
-                           Deletor deletor = DefaultDeleter()) {
-      return std::make_shared<Buffer>(device_type, data, size, deletor);
+                           Deleter deleter = DefaultDeletor()) {
+      return std::make_shared<Buffer>(device_type, data, size, deleter);
     }
   };
 
@@ -51,18 +47,17 @@ public:
 
   void* get(size_t offset, size_t size) const;
 
-private:
   Buffer(DeviceType device_type);
 
   Buffer(DeviceType device_type, size_t size);
 
-  Buffer(DeviceType device_type, void* data, size_t size, Deletor deletor = DefaultDeleter());
+  Buffer(DeviceType device_type, void* data, size_t size, Deleter deleter = DefaultDeletor());
 
 private:
   DeviceType device_type_;
   void* data_;
   size_t size_;  // in bytes
-  Deletor deletor_;
+  Deleter deleter_;
   bool is_extern_;
   AllocatorPtr allocator_;
   void alloc(size_t size);
