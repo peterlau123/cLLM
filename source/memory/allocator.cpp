@@ -1,5 +1,7 @@
 #include "allocator.h"
 
+#include <new>
+
 namespace cllm {
 
   CPUAllocator::CPUAllocator() {
