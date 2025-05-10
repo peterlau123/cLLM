@@ -48,6 +48,18 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 endif()
 # ---- Create library ----
+# 查找 Doxygen
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    # 添加文档生成目标
+    add_custom_target(docs
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating documentation with Doxygen"
+        VERBATIM
+    )
+endif()
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
