@@ -24,6 +24,15 @@ class CPUAllocator : public Allocator {
  public:
   CPUAllocator();
   ~CPUAllocator() override;
+
+  /**
+   * @brief 分配指定大小的内存
+   * @param size 要分配的字节数
+   * @param[out] data 指向分配内存的指针的指针
+   * @throw std::bad_alloc 内存分配失败时抛出
+   * @see <a href="https://en.cppreference.com/w/cpp/memory/new/operator_new">operator new[]</a>
+   * @todo 参考https://github.com/microsoft/mimalloc，tcmalloc和jellalloc，优化当前alloc实现
+   */
   void alloc(int size, void** data) override;
   void dealloc(void** data) override;
 };

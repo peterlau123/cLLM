@@ -37,11 +37,11 @@ include(cmake/CPMDependency.cmake)
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-file(GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/source/*_test.cpp")
-if(NOT CLLLM_BUILD_TESTS)
-  message(STATUS "Unit tests are disabled.")
-  list(REMOVE_ITEM sources ${test_sources})
-endif()
+#file(GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/source/*_test.cpp")
+#if(NOT CLLLM_BUILD_TESTS)
+#  message(STATUS "Unit tests are disabled.")
+#  list(REMOVE_ITEM sources ${test_sources})
+#endif()
 
 # -- build settings ---
 if(NOT CMAKE_BUILD_TYPE)
