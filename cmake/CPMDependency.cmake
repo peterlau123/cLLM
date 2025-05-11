@@ -6,7 +6,7 @@ CPMAddPackage(
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 
-if(CLLLM_BUILD_TESTS)
+if(CLLM_BUILD_TESTS)
   CPMAddPackage(
     NAME GTest
     GITHUB_REPOSITORY google/googletest
@@ -20,7 +20,7 @@ endif()
 
 
 # 添加 spdlog
-if(CLLM_LOGGING)
+if(CLLM_ENABLE_LOGGING)
   CPMAddPackage(
       NAME spdlog
       GITHUB_REPOSITORY gabime/spdlog

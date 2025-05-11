@@ -70,11 +70,16 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
-if(CLLLM_BUILD_TESTS)
-  target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt GTest::gtest GTest::gmock)
-else()
-  target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt )
+set(DEPENDENCY_LIST fmt::fmt)
+if(CLLM_BUILD_TESTS)
+  LIST(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
 endif()
+if(CLLM_ENABLE_LOGGING)
+  LIST(APPEND DEPENDENCY_LIST spdlog::spdlog)
+endif(
+  CLLM_ENABLE_LOGGING
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST} )
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
