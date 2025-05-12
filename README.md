@@ -11,7 +11,7 @@
 
 # cLLM
 
-LLM inference using pure c and c++. The **c** in cLLM means **crack**.
+LLM inference using pure c and c++. The **c** in cLLM means **crack** and **c/c++**.
 
 Our goal is to crack the difficulties of LLM and make it available to evryone and everywhere.
 
@@ -19,6 +19,11 @@ Our goal is to crack the difficulties of LLM and make it available to evryone an
 
 We support the following features:
 
++ No heavy dependency on thirdparty libraries
++ Easy to extend and flexible
++ Support extreme low-bit models
++ Support model compilation via TVM
++ Support OpenAI Triton and ThunderKittens' kernel integration
 
 ## Models
 

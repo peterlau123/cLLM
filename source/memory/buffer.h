@@ -6,6 +6,9 @@
 #include "allocator.h"
 
 namespace cllm {
+/*
+ * @todo: use segregated free list
+ * */
 class Buffer {
  public:
   struct DefaultDeletor {
