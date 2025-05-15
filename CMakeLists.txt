@@ -7,6 +7,7 @@ project(
   cLLM
   VERSION 0.1.0
   LANGUAGES CXX
+  HOMEPAGE_URL  "https://github.com/peterlau123/cLLM"
 )
 
 # ---- Include guards ----
@@ -26,6 +27,8 @@ endif()
 
 include(cmake/CPM.cmake)
 
+include(cmake/options.cmake)
+
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
@@ -37,11 +40,6 @@ include(cmake/CPMDependency.cmake)
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-#file(GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/source/*_test.cpp")
-#if(NOT CLLLM_BUILD_TESTS)
-#  message(STATUS "Unit tests are disabled.")
-#  list(REMOVE_ITEM sources ${test_sources})
-#endif()
 
 # -- build settings ---
 if(NOT CMAKE_BUILD_TYPE)
@@ -73,6 +71,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 set(DEPENDENCY_LIST fmt::fmt)
 if(CLLM_BUILD_TESTS)
   LIST(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${GTest_INCLUDE_DIRS})
 endif()
 if(CLLM_ENABLE_LOGGING)
   LIST(APPEND DEPENDENCY_LIST spdlog::spdlog)

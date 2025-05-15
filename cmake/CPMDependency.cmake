@@ -15,7 +15,12 @@ if(CLLM_BUILD_TESTS)
     OPTIONS
       "INSTALL_GTEST OFF"
       "BUILD_GMOCK ON"
+      "BUILD_SHARED_LIBS OFF"
   )
+  if(GTest_ADDED)
+    message(STATUS "GTest found")
+    include(GoogleTest)
+  endif()
 endif()
 
 

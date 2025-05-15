@@ -107,13 +107,20 @@ class Tensor {
    */
   Tensor& operator+(const Tensor& rhs);
 
+  vector<uint32_t> dims() const { return dims_; }
+
   /**
    * @brief 获取指定维度的大小
    *
    * @param idx 维度索引
    * @return int 返回该维度的大小
    */
-  int dim(int idx) const;
+  uint32_t dimAt(uint32_t idx) const {
+    if (static_cast<int>(dims_.size()) <= idx) {
+      return -1;  // TODO: 异常处理
+    }
+    return dims_[idx];
+  }
 
   /**
    * @brief 获取张量的元素总数
