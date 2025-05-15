@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 
+#include "decoder.h"
+#include "embedding.h"
 #include "model/model.h"
 #include "tokenizer.h"
 
