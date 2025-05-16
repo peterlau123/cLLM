@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
-project(GreeterTests LANGUAGES CXX)
+project(cLLMTests LANGUAGES CXX)
 
 # ---- Options ----
 
@@ -15,8 +15,17 @@ include(../cmake/tools.cmake)
 
 include(../cmake/CPM.cmake)
 
-CPMAddPackage("gh:doctest/doctest@2.4.9")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
+
+CPMAddPackage(
+  NAME GTest
+  GITHUB_REPOSITORY google/googletest
+  GIT_TAG main  # 或者使用特定版本，如 release-1.12.1
+  VERSION 1.12.1
+  OPTIONS
+    "INSTALL_GTEST OFF"
+    "BUILD_GMOCK ON"
+)
 
 if(TEST_INSTALLED_VERSION)
   find_package(Greeter REQUIRED)

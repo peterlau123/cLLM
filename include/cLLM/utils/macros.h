@@ -7,13 +7,13 @@
 #define cLLM_VERSION (cLLM_VERSION_MAJOR * 10000 + cLLM_VERSION_MINOR * 100 + cLLM_VERSION_PATCH)
 
 #ifdef _WIN32
-#  ifdef cLLM_EXPORTS
-#    define CLLM_API __declspec(dllexport)
-#  else
-#    define CLLM_API __declspec(dllimport)
-#  endif
+#ifdef cLLM_EXPORTS
+#define CLLM_API __declspec(dllexport)
 #else
-#  define CLLM_API __attribute__((visibility("default")))
+#define CLLM_API __declspec(dllimport)
+#endif
+#else
+#define CLLM_API __attribute__((visibility("default")))
 #endif
 
 #define _IN

@@ -1,16 +1,29 @@
 ---
-  BasedOnStyle: Google
-  AccessModifierOffset: '-2'
-  AlignTrailingComments: 'true'
-  AllowAllParametersOfDeclarationOnNextLine: 'false'
-  AlwaysBreakTemplateDeclarations: 'No'
-  BreakBeforeBraces: Attach
-  ColumnLimit: '100'
-  ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
-  IncludeBlocks: Regroup
-  IndentPPDirectives: AfterHash
-  IndentWidth: '2'
-  NamespaceIndentation: All
-  BreakBeforeBinaryOperators: All
-  BreakBeforeTernaryOperators: 'true'
-...
+Language: Cpp
+BasedOnStyle: Google
+
+# 增加行间距
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 2
+SeparateDefinitionBlocks: Always
+
+# 基础缩进配置
+IndentWidth: 2
+ContinuationIndentWidth: 4
+ColumnLimit: 100
+
+# 函数参数和初始化列表格式
+BinPackArguments: false
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: BeforeComma
+
+# 空格和对齐
+SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeCpp11BracedList: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
