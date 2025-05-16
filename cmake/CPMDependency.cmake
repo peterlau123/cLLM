@@ -1,3 +1,6 @@
+# PackageProject.cmake will be used to make our target installable
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
+
 # add fmt
 CPMAddPackage(
   NAME fmt
@@ -18,9 +21,15 @@ if(CLLM_BUILD_TESTS)
       "BUILD_SHARED_LIBS OFF"
   )
   if(GTest_ADDED)
-    message(STATUS "GTest found")
+    message(STATUS "GTest ADDED")
     include(GoogleTest)
   endif()
+  find_package(GTest REQUIRED)
+  if(GTest_FOUND)
+    message(STATUS "GTest FOUND")
+  endif()
+  message(STATUS "GTest_LIBRARIES: ${GTest_LIBRARIES}")
+  message(STATUS "GTest_INCLUDE_DIRS: ${GTest_INCLUDE_DIRS}")
 endif()
 
 

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../memory/buffer.h"
+#include "../utils/macros.h"
 
 namespace cllm {
 
@@ -116,9 +117,7 @@ class Tensor {
    * @return int 返回该维度的大小
    */
   uint32_t dimAt(uint32_t idx) const {
-    if (static_cast<int>(dims_.size()) <= idx) {
-      return -1;  // TODO: 异常处理
-    }
+    ASSERT(idx < dims_.size(), "idx out of range");
     return dims_[idx];
   }
 

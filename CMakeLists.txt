@@ -29,9 +29,6 @@ include(cmake/CPM.cmake)
 
 include(cmake/options.cmake)
 
-# PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
-
 include(cmake/CPMDependency.cmake)
 
 # ---- Add source files ----
@@ -61,6 +58,16 @@ endif()
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
+if(CLLM_BUILD_TESTS)
+    set(CLLM_TEST_TARGET ${PROJECT_NAME}_test )
+    add_executable(${CLLM_TEST_TARGET}
+            ${sources}
+    )
+endif ()
+
+if(NOT CLLM_BUILD_TESTS)
+    list(FILTER sources EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/source/.*_test\\.cpp$")
+endif ()
 add_library(${PROJECT_NAME} SHARED ${headers} ${sources})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 
@@ -69,16 +76,16 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 
 # Link dependencies
 set(DEPENDENCY_LIST fmt::fmt)
-if(CLLM_BUILD_TESTS)
-  LIST(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
-  target_include_directories(${PROJECT_NAME} PRIVATE ${GTest_INCLUDE_DIRS})
-endif()
 if(CLLM_ENABLE_LOGGING)
   LIST(APPEND DEPENDENCY_LIST spdlog::spdlog)
 endif(
   CLLM_ENABLE_LOGGING
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST} )
+if(CLLM_BUILD_TESTS)
+  LIST(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
+  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_NAME})
+endif()
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
