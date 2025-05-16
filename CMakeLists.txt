@@ -52,6 +52,7 @@ endif()
 if(CLLM_BUILD_TESTS)
   set(CLLM_TEST_TARGET ${PROJECT_NAME}_test)
   add_executable(${CLLM_TEST_TARGET} ${sources})
+  target_include_directories(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 endif()
 
 if(NOT CLLM_BUILD_TESTS)
@@ -72,6 +73,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST})
 if(CLLM_BUILD_TESTS)
   list(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
   target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${DEPENDENCY_LIST})
+  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_NAME})
 endif()
 
 target_include_directories(

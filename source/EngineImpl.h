@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#include "parser.h"
-#include "pipeline.h"
+#include "cLLM/parser.h"
+#include "cLLM/pipeline.h"
 
 namespace cllm {
 

@@ -1,7 +1,7 @@
 #include <fmt/format.h>
 
 #include "EngineImpl.h"
-#include "cLLM/cLLM-cpp.h"
+#include "cLLM-cpp.h"
 
 namespace cllm {
 
