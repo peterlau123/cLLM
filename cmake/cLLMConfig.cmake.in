@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(fmt)
+if(@CLLM_ENABLE_LOGGING@)
+    find_dependency(spdlog)
+endif()
+if(@CLLM_BUILD_TESTS@)
+    find_dependency(GTest)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake") 
