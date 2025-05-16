@@ -1,8 +1,38 @@
-/build*
-/.vscode
-/cpm_modules
-.DS_Store
-cmake-build-debug
-cmake-build-release
-.idea
+# Build and Conan
+build/
+cmake-build-*/
 install/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+conanbuild*
+conanrun*
+conan.lock
+CMakeUserPresets.json
+CMakePresets.json
+*.cmake
+*.o
+*.obj
+*.so
+*.a
+*.dylib
+*.dll
+*.exe
+*.log
+*.tmp
+*.swp
+*.DS_Store
+# VSCode/CLion/IDE
+.idea/
+.vscode/
+# Test output
+Testing/
+# Doxygen
+html/
+latex/
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+coverage/

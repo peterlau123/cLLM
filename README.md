@@ -1,9 +1,8 @@
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/MacOS/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Windows/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Ubuntu/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Style/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Install/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![codecov](https://codecov.io/gh/TheLartians/ModernCppStarter/branch/master/graph/badge.svg)](https://codecov.io/gh/TheLartians/ModernCppStarter)
+[![Ubuntu](https://github.com/peterlau123/cLLM/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/ubuntu.yml)
+[![Windows](https://github.com/peterlau123/cLLM/actions/workflows/windows.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/windows.yml)
+[![Code Quality](https://github.com/peterlau123/cLLM/actions/workflows/code-quality.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/code-quality.yml)
+[![Documentation](https://github.com/peterlau123/cLLM/actions/workflows/documentation.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/documentation.yml)
+[![codecov](https://codecov.io/gh/peterlau123/cLLM/branch/master/graph/badge.svg)](https://codecov.io/gh/peterlau123/cLLM)
 
 <p align="center">
   <img src="documentation/images/cLLM_logo.png" height="200" width="250" />
@@ -11,202 +10,143 @@
 
 # cLLM
 
-LLM inference using pure c and c++. The **c** in cLLM means **crack** and **c/c++**.
-
-Our goal is to crack the difficulties of LLM and make it available to evryone and everywhere.
+A lightweight and efficient C/C++ library for Large Language Model (LLM) inference. The **c** in cLLM stands for **crack** and **C/C++**, reflecting our goal to crack the complexities of LLM deployment and make it accessible everywhere.
 
 ## Features
 
-We support the following features:
+- 🚀 **Lightweight**: Minimal dependencies, focusing on core functionality
+- 🔧 **Extensible**: Easy to extend with custom models and optimizations
+- 🎯 **Efficient**: Support for extreme low-bit quantization
+- ⚡ **Fast**: Integration with TVM for model compilation
+- 🛠️ **Flexible**: Support for OpenAI Triton and ThunderKittens kernels
 
-+ No heavy dependency on thirdparty libraries
-+ Easy to extend and flexible
-+ Support extreme low-bit models
-+ Support model compilation via TVM
-+ Support OpenAI Triton and ThunderKittens' kernel integration
+## Supported Models
 
-## Models
+### Language Models
 
-### Large language models
+| Model | Parameters | Status |
+|-------|------------|--------|
+| Qwen | 1.8B | 🟡 In Development |
+| | 7B | ⚪ Planned |
+| | 14B | ⚪ Planned |
+| DeepSeek | 7B | ⚪ Planned |
+| | 67B | ⚪ Planned |
+| Llama | 7B | ⚪ Planned |
 
-|Model|Parameters|Status|
-|---|---|---|
-|Qwen|1.8B| ![](https://img.shields.io/badge/开发中-yellow)|
-|    |7B| ![](https://img.shields.io/badge/待处理-lightgrey)|
-|    |14B|![](https://img.shields.io/badge/待处理-lightgrey)|
-| DeepSeek |7B|![](https://img.shields.io/badge/待处理-lightgrey)|
-| DeepSeek |67B|![](https://img.shields.io/badge/待处理-lightgrey)|
-| Llama |7B|![](https://img.shields.io/badge/待处理-lightgrey)|
+### Vision Models
+*Coming soon...*
 
+## Quick Start
 
-### Large vision models
+### Prerequisites
 
+- CMake 3.14 or higher
+- C++17 compatible compiler
+- Conan package manager
+- Python 3.10+ (for Conan)
 
+### Building
 
-## Usage
-
-### Requirements
-
-### Build and run the standalone target
-
-Use the following command to build and run the executable target.
-
+1. **Clone the repository**
 ```bash
-cmake -S standalone -B build/standalone
-cmake --build build/standalone
-./build/standalone/Greeter --help
+git clone https://github.com/peterlau123/cLLM.git
+cd cLLM
 ```
 
-### Build and run test suite
-
-Use the following commands from the project's root directory to run the test suite.
-
+2. **Install dependencies and build**
 ```bash
-cmake -S test -B build/test
-cmake --build build/test
-CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
+# Create and enter build directory
+mkdir build && cd build
 
-# or simply call the executable: 
-./build/test/GreeterTests
+# Install dependencies with Conan
+conan install .. --output-folder=. --build=missing
+
+# Configure and build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build .
 ```
 
-To collect code coverage information, run CMake with the `-DENABLE_TEST_COVERAGE=1` option.
-
-### Run clang-format
-
-Use the following commands from the project's root directory to check and fix C++ and CMake source style.
-This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
-
+3. **Run tests**
 ```bash
-cmake -S test -B build/test
+# Run all tests
+ctest --output-on-failure
 
-# view changes
-cmake --build build/test --target format
-
-# apply changes
-cmake --build build/test --target fix-format
+# Run specific test
+./bin/cLLM_tests
 ```
 
-See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
-These dependencies can be easily installed using pip.
+### Development
+
+#### Code Style
+
+We use clang-format for code formatting. To format your code:
 
 ```bash
-pip install clang-format==14.0.6 cmake_format==0.6.11 pyyaml
-```
+# Install clang-format
+pip install clang-format==14.0.6
 
-### Build the documentation
-
-The documentation is automatically built and [published](https://thelartians.github.io/ModernCppStarter) whenever a [GitHub Release](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository) is created.
-To manually build documentation, call the following command.
-
-```bash
-cmake -S documentation -B build/doc
-cmake --build build/doc --target GenerateDocs
-# view the docs
-open build/doc/doxygen/html/index.html
-```
-
-To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.
-
-### Build everything at once
-
-The project also includes an `all` directory that allows building all targets at the same time.
-This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
-
-```bash
-cmake -S all -B build
-cmake --build build
-
-# run tests
-./build/test/GreeterTests
-# format code
+# Format code
 cmake --build build --target fix-format
-# run standalone
-./build/standalone/Greeter --help
-# build docs
-cmake --build build --target GenerateDocs
 ```
 
-### Additional tools
+#### Building Documentation
 
-The test and standalone subprojects include the [tools.cmake](cmake/tools.cmake) file which is used to import additional tools on-demand through CMake configuration arguments.
-The following are currently supported.
+```bash
+# Build documentation
+cmake --build build --target docs
 
-#### Sanitizers
+# View documentation
+open build/docs/html/index.html
+```
 
-Sanitizers can be enabled by configuring CMake with `-DUSE_SANITIZER=<Address | Memory | MemoryWithOrigins | Undefined | Thread | Leak | 'Address;Undefined'>`.
+## Advanced Usage
 
-#### Static Analyzers
+### Model Quantization
 
-Static Analyzers can be enabled by setting `-DUSE_STATIC_ANALYZER=<clang-tidy | iwyu | cppcheck>`, or a combination of those in quotation marks, separated by semicolons.
-By default, analyzers will automatically find configuration files such as `.clang-format`.
-Additional arguments can be passed to the analyzers by setting the `CLANG_TIDY_ARGS`, `IWYU_ARGS` or `CPPCHECK_ARGS` variables.
+```cpp
+#include <cLLM/quantization.hpp>
 
-#### Ccache
+// Example quantization code
+auto quantized_model = cLLM::quantize_model(model, cLLM::QuantizationType::INT8);
+```
 
-Ccache can be enabled by configuring with `-DUSE_CCACHE=<ON | OFF>`.
+### TVM Integration
 
-## FAQ
+```cpp
+#include <cLLM/tvm.hpp>
 
-> Can I use this for header-only libraries?
+// Example TVM compilation
+auto compiled_model = cLLM::compile_with_tvm(model, "cuda");
+```
 
-Yes, however you will need to change the library type to an `INTERFACE` library as documented in the [CMakeLists.txt](CMakeLists.txt).
-See [here](https://github.com/TheLartians/StaticTypeInfo) for an example header-only library based on the template.
+### Custom Kernel Integration
 
-> I don't need a standalone target / documentation. How can I get rid of it?
+```cpp
+#include <cLLM/kernels.hpp>
 
-Simply remove the standalone / documentation directory and according github workflow file.
+// Example custom kernel usage
+cLLM::register_custom_kernel("my_kernel", kernel_function);
+```
 
-> Can I build the standalone and tests at the same time? / How can I tell my IDE about all subprojects?
+## Contributing
 
-To keep the template modular, all subprojects derived from the library have been separated into their own CMake modules.
-This approach makes it trivial for third-party projects to re-use the projects library code.
-To allow IDEs to see the full scope of the project, the template includes the `all` directory that will create a single build for all subprojects.
-Use this as the main directory for best IDE support.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-> I see you are using `GLOB` to add source files in CMakeLists.txt. Isn't that evil?
+## License
 
-Glob is considered bad because any changes to the source file structure [might not be automatically caught](https://cmake.org/cmake/help/latest/command/file.html#filesystem) by CMake's builders and you will need to manually invoke CMake on changes.
-  I personally prefer the `GLOB` solution for its simplicity, but feel free to change it to explicitly listing sources.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-> I want create additional targets that depend on my library. Should I modify the main CMakeLists to include them?
+## Acknowledgments
 
-Avoid including derived projects from the libraries CMakeLists (even though it is a common sight in the C++ world), as this effectively inverts the dependency tree and makes the build system hard to reason about.
-Instead, create a new directory or project with a CMakeLists that adds the library as a dependency (e.g. like the [standalone](standalone/CMakeLists.txt) directory).
-Depending type it might make sense move these components into a separate repositories and reference a specific commit or version of the library.
-This has the advantage that individual libraries and components can be improved and updated independently.
+- [TVM](https://tvm.apache.org/) for model compilation support
+- [OpenAI Triton](https://github.com/openai/triton) for kernel optimizations
+- [ThunderKittens](https://github.com/HazyResearch/ThunderKittens) for kernel implementations
 
-> You recommend to add external dependencies using CPM.cmake. Will this force users of my library to use CPM.cmake as well?
+## Contact
 
-[CPM.cmake](https://github.com/TheLartians/CPM.cmake) should be invisible to library users as it's a self-contained CMake Script.
-If problems do arise, users can always opt-out by defining the CMake or env variable [`CPM_USE_LOCAL_PACKAGES`](https://github.com/cpm-cmake/CPM.cmake#options), which will override all calls to `CPMAddPackage` with the according `find_package` call.
-This should also enable users to use the project with their favorite external C++ dependency manager, such as vcpkg or Conan.
-
-> Can I configure and build my project offline?
-
-No internet connection is required for building the project, however when using CPM missing dependencies are downloaded at configure time.
-To avoid redundant downloads, it's highly recommended to set a CPM.cmake cache directory, e.g.: `export CPM_SOURCE_CACHE=$HOME/.cache/CPM`.
-This will enable shallow clones and allow offline configurations dependencies are already available in the cache.
-
-> Can I use CPack to create a package installer for my project?
-
-As there are a lot of possible options and configurations, this is not (yet) in the scope of this template. See the [CPack documentation](https://cmake.org/cmake/help/latest/module/CPack.html) for more information on setting up CPack installers.
-
-> This is too much, I just want to play with C++ code and test some libraries.
-
-Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is something for you!
-
-## Related projects and alternatives
-
-- [**ModernCppStarter & PVS-Studio Static Code Analyzer**](https://github.com/viva64/pvs-studio-cmake-examples/tree/master/modern-cpp-starter): Official instructions on how to use the ModernCppStarter with the PVS-Studio Static Code Analyzer.
-- [**cpp-best-practices/gui_starter_template**](https://github.com/cpp-best-practices/gui_starter_template/): A popular C++ starter project, created in 2017.
-- [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
-- [**vector-of-bool/pitchfork**](https://github.com/vector-of-bool/pitchfork/): Pitchfork is a Set of C++ Project Conventions.
-
-## References
-
-
+- GitHub Issues: [Create an issue](https://github.com/peterlau123/cLLM/issues)
+- Email: [Your email]
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=TheLartians/ModernCppStarter,cpp-best-practices/gui_starter_template,filipdutescu/modern-cpp-template&type=Date)](https://star-history.com/#TheLartians/ModernCppStarter&cpp-best-practices/gui_starter_template&filipdutescu/modern-cpp-template&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=peterlau123/cLLM&type=Date)](https://star-history.com/#peterlau123/cLLM&Date)
