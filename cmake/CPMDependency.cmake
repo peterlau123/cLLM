@@ -10,26 +10,17 @@ CPMAddPackage(
 )
 
 if(CLLM_BUILD_TESTS)
+  set(GOOGLETEST_VERSION 1.12.1)
   CPMAddPackage(
     NAME GTest
     GITHUB_REPOSITORY google/googletest
-    GIT_TAG main  # 或者使用特定版本，如 release-1.12.1
+    GIT_TAG release-1.12.1  # 或者使用特定版本，如 release-1.12.1
     VERSION 1.12.1
     OPTIONS
       "INSTALL_GTEST OFF"
       "BUILD_GMOCK ON"
       "BUILD_SHARED_LIBS OFF"
   )
-  if(GTest_ADDED)
-    message(STATUS "GTest ADDED")
-    include(GoogleTest)
-  endif()
-  find_package(GTest REQUIRED)
-  if(GTest_FOUND)
-    message(STATUS "GTest FOUND")
-  endif()
-  message(STATUS "GTest_LIBRARIES: ${GTest_LIBRARIES}")
-  message(STATUS "GTest_INCLUDE_DIRS: ${GTest_INCLUDE_DIRS}")
 endif()
 
 

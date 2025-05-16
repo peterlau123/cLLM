@@ -84,7 +84,7 @@ endif(
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST} )
 if(CLLM_BUILD_TESTS)
   LIST(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
-  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_NAME})
+  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${DEPENDENCY_LIST})
 endif()
 
 target_include_directories(
