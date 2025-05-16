@@ -108,7 +108,7 @@ class Tensor {
    */
   Tensor& operator+(const Tensor& rhs);
 
-  vector<uint32_t> dims() const { return dims_; }
+  std::vector<uint32_t> dims() const { return dims_; }
 
   /**
    * @brief 获取指定维度的大小
