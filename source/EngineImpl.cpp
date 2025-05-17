@@ -1,6 +1,14 @@
 #include "EngineImpl.h"
 
+#include <memory>
+
 namespace cllm {
+
+EngineImpl::EngineImplPtr EngineImpl::build() {
+
+  auto ptr = std::make_shared<EngineImpl>();
+  return ptr;
+}
 
 bool EngineImpl::init() {
   bool ret = false;

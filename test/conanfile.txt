@@ -1,0 +1,15 @@
+[requires]
+cLLM/0.1.0
+gtest/1.12.1
+fmt/9.1.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+gtest:shared=False
+gtest:build_gmock=True
+gtest:build_gtest=True
+gtest:build_gtest_main=True
+gtest:build_gmock_main=True 
