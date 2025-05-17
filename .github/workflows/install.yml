@@ -3,12 +3,16 @@ name: Install
 on:
   push:
     branches:
-      - master
-      - main
+      - 'main'  # All branches
+      - 'master'
+      - 'develop'
+      - 'release/**'
   pull_request:
     branches:
-      - master
-      - main
+      - 'main'  # All branches
+      - 'master'
+      - 'develop'
+      - 'release/**'
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1

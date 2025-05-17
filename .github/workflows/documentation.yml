@@ -2,7 +2,11 @@ name: Documentation
 
 on:
   push:
-    branches: [ master, main ]
+    branches:
+      - 'main'  # All branches
+      - 'master'
+      - 'develop'
+      - 'release/**'
     paths:
       - '**.h'
       - '**.cpp'

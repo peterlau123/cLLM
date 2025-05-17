@@ -3,12 +3,10 @@ name: MacOS
 on:
   push:
     branches:
-      - master
-      - main
+      - '**'  # This will match all branches
   pull_request:
     branches:
-      - master
-      - main
+      - '**'  # This will match all branches
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1

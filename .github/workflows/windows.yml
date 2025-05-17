@@ -2,9 +2,9 @@ name: Windows
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ '**' ]
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
