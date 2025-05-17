@@ -1,4 +1,4 @@
-#include "tensor.h"
+#include "cLLM/data/tensor.h"
 
 #include "../utils/macros.h"
 
