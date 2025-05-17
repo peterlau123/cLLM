@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <functional>
 
-#include "../backend/device.h"
+#include "cLLM/common/device.h"
 #include "cLLM/memory/allocator.h"
 
 namespace cllm {
