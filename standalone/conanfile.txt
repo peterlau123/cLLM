@@ -1,0 +1,12 @@
+[requires]
+cLLM/0.1.0
+cxxopts/3.0.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+cxxopts:build_examples=False
+cxxopts:build_tests=False
+cxxopts:enable_install=True 
