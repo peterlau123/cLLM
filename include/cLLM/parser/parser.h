@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "utils/template.hpp"
+#include "../utils/template.h"
 
 namespace cllm {
 

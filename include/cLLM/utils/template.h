@@ -12,3 +12,4 @@ template <typename T>
 struct UniquePtrWrapper {
   using Type = std::unique_ptr<T>;
 };
+#define DEFINE_UNIQUE_PTR(X) using X##Ptr = UniquePtrWrapper<X>::Type

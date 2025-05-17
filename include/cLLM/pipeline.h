@@ -1,16 +1,43 @@
 #pragma once
-
 #include <memory>
-#include <string>
+
+#include "cLLM/decode/decoder.h"
+#include "cLLM/encode/embedding.h"
+#include "model/model.h"
+#include "tokenizer.h"
 
 namespace cllm {
 
 class Pipeline {
  public:
+  Pipeline() = default;
+
   virtual ~Pipeline() = default;
-  virtual std::string process(const std::string& input) = 0;
+
+  // Add methods for pipeline processing
+  virtual void process() = 0;
 };
 
 using PipelinePtr = std::shared_ptr<Pipeline>;
+
+class Qwenpipeline : public Pipeline {
+ public:
+  Qwenpipeline() = default;
+
+  ~Qwenpipeline() override = default;
+
+  void process() override {
+    // Implement the processing logic for Qwen pipeline
+  }
+
+ private:
+  QwenModelPtr qwen_model_;
+  Tokenizer tokenizer_;
+};
+
+template <typename T>
+PipelinePtr createPipeline() {
+  return std::make_shared<T>();
+}
 
 }  // namespace cllm
