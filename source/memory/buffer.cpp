@@ -1,7 +1,7 @@
-#include "buffer.h"
+#include "cLLM/memory/buffer.h"
 
 #include "../utils/macros.h"
-#include "allocator.h"
+#include "cLLM/memory/allocator.h"
 
 namespace cllm {
 

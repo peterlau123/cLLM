@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "../backend/device.h"
-#include "allocator.h"
+#include "cLLM/memory/allocator.h"
 
 namespace cllm {
 /*
