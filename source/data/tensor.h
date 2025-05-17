@@ -128,6 +128,12 @@ class Tensor {
    */
   int size() const { return size_; }
 
+  DataType dtype() const { return dtype_; }
+
+  DeviceType device() const { return device_; }
+
+  uint8_t* data() const { return reinterpret_cast<uint8_t*>(buffer_->data()); }
+
   /**
    * @brief 析构函数
    */

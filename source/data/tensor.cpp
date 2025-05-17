@@ -57,3 +57,35 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   buffer_ = Buffer::Builder::build(device, size_ * getByteSize(dtype));
   ASSERT(buffer_ != nullptr, "Failed to allocate buffer");
 }
+
+Tensor::Tensor(const void* data,
+               const std::vector<uint32_t>& dims,
+               DataType dtype,
+               DeviceType device,
+               Deleter deleter) {
+  // TODO
+}
+
+Tensor::Tensor(const BufferPtr& buffer_ptr) {
+  // TODO
+}
+
+Tensor::Tensor(const Tensor& other) {}
+
+Tensor& Tensor::operator=(const Tensor& other) {
+  Tensor ret;
+  return ret;
+}
+
+Tensor& Tensor::operator*(const Tensor& rhs) {
+
+  Tensor ret;
+  return ret;
+}
+
+Tensor& Tensor::operator+(const Tensor& rhs) {
+  Tensor ret;
+  return ret;
+}
+
+Tensor::~Tensor() {}

@@ -33,6 +33,10 @@ include(cmake/options.cmake)
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 
+# Separate test sources
+file(GLOB_RECURSE test_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*_test.cpp")
+list(FILTER sources EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/source/.*_test\\.cpp$")
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 endif()
@@ -48,20 +52,24 @@ if(DOXYGEN_FOUND)
   )
 endif()
 
-# ===================== Library & Executable ================
-if(CLLM_BUILD_TESTS)
-  set(CLLM_TEST_TARGET ${PROJECT_NAME}_test)
-  add_executable(${CLLM_TEST_TARGET} ${sources})
-  target_include_directories(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_SOURCE_DIR}/include)
-endif()
-
-if(NOT CLLM_BUILD_TESTS)
-  list(FILTER sources EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/source/.*_test\\.cpp$")
-endif()
-
+# ===================== Library ============================
 add_library(${PROJECT_NAME} SHARED ${headers} ${sources})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+
+# ===================== Test Executable ====================
+if(CLLM_BUILD_TESTS)
+  add_executable(${PROJECT_NAME}_test ${test_sources})
+  set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD 17)
+  target_include_directories(${PROJECT_NAME}_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
+  target_link_libraries(${PROJECT_NAME}_test PRIVATE 
+    ${PROJECT_NAME}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+    GTest::gmock_main
+  )
+endif()
 
 # ===================== Link Dependencies ===================
 set(DEPENDENCY_LIST fmt::fmt)
@@ -70,24 +78,18 @@ if(CLLM_ENABLE_LOGGING)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST})
 
-if(CLLM_BUILD_TESTS)
-  list(APPEND DEPENDENCY_LIST GTest::gtest GTest::gmock)
-  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${DEPENDENCY_LIST})
-  target_link_libraries(${CLLM_TEST_TARGET} PRIVATE ${PROJECT_NAME})
-endif()
-
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
 
 # ===================== Install Targets =====================
-string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "默认安装路径" FORCE)
   message(STATUS "设置安装路径为: ${CMAKE_INSTALL_PREFIX}")
 endif()
 
+# Install library and headers
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Targets
         LIBRARY DESTINATION lib
@@ -101,29 +103,31 @@ install(DIRECTORY include/
         FILES_MATCHING PATTERN "*.h"
 )
 
-install(EXPORT ${PROJECT_NAME}Targets
-        FILE ${PROJECT_NAME}Targets.cmake
-        NAMESPACE ${PROJECT_NAME}::
-        DESTINATION lib/cmake/${PROJECT_NAME}
-)
-
+# Generate and install config files
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    "${PROJECT_NAME}ConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
-    "${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
+# Install config files
 install(FILES
-    "${PROJECT_NAME}Config.cmake"
-    "${PROJECT_NAME}ConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION lib/cmake/${PROJECT_NAME}
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+        FILE ${PROJECT_NAME}Targets.cmake
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 # ===================== Summary =============================
