@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "cLLM/decode/decoder.h"
-#include "cLLM/encode/embedding.h"
+#include "cLLM/encode/encoder.h"
 #include "model/model.h"
 #include "tokenizer.h"
 

@@ -6,22 +6,22 @@ using namespace cllm;
 
 namespace {
 
-uint64_t getByteSize(Tensor::DataType dtype) {
+uint64_t getByteSize(DataType dtype) {
   switch (dtype) {
-    case Tensor::DataType::INT8:
-    case Tensor::DataType::UINT8:
+    case DataType::INT8:
+    case DataType::UINT8:
       return sizeof(uint8_t);
-    case Tensor::DataType::INT16:
-    case Tensor::DataType::UINT16:
+    case DataType::INT16:
+    case DataType::UINT16:
       return sizeof(uint16_t);
-    case Tensor::DataType::INT32:
-    case Tensor::DataType::UINT32:
+    case DataType::INT32:
+    case DataType::UINT32:
       return sizeof(uint32_t);
-    case Tensor::DataType::FLOAT32:
+    case DataType::FLOAT32:
       return sizeof(float);
-    case Tensor::DataType::FLOAT64:
+    case DataType::FLOAT64:
       return sizeof(double);
-    case Tensor::DataType::BOOL:
+    case DataType::BOOL:
       return sizeof(bool);
     default:
       ASSERT(false, "Unsupported data type");
@@ -49,6 +49,7 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   for (const auto& dim : dims_) {
     size_ *= dim;
   }
+  // TODO:get data
 }
 
 Tensor::Tensor(const void* data,
@@ -67,7 +68,6 @@ Tensor& Tensor::operator=(const Tensor& other) {
 }
 
 Tensor& Tensor::operator*(const Tensor& rhs) {
-
   Tensor ret;
   return ret;
 }

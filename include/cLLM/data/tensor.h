@@ -23,7 +23,7 @@ class Tensor {
   enum class DataSourceType {
     UNKNOWN = -1,
     MANUAL,  // Marked data managed by user including allocation and de-allocation
-    AUTO     // Marked data managed
+    AUTO     // Marked data managed by framework
   };
 
   /**
