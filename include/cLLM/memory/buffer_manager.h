@@ -5,10 +5,9 @@
 
 #include "cLLM/common/device.h"
 #include "cLLM/memory/allocator.h"
+#include "cLLM/memory/buffer_define.h"
 
 namespace cllm {
-
-
 /*
  * @todo: use segregated free list
  * */
@@ -19,16 +18,15 @@ class BufferManager {
   struct Config {
     DeviceTypeFlags device_flags;
 
-    struct CPU {};
+    struct CPU {
+      IAllocatorPtr alloc {nullptr};
+    };
+
+    CPU cpu;
 
     struct GPU {};
 
-    struct Metal {};
-  };
-
-  struct Buffer {
-    uint8_t* data {nullptr};
-    size_t size = 0;  // in bytes
+    struct METAL {};
   };
 
   class Builder {

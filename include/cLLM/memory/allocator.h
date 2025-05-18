@@ -2,58 +2,46 @@
 #include <memory>
 
 #include "cLLM/common/device.h"
+#include "cLLM/utils/template.h"
 
 namespace cllm {
-class Allocator {
- public:
-  Allocator() = default;
-  virtual ~Allocator() = default;
 
-  /*
-   * @brief Allocates memory of the given size.
-   * @param size Size of the memory to allocate in bytes.
-   * @param data Pointer to the allocated memory.
-   */
-  virtual void alloc(int size, void** data) = 0;
-  virtual void dealloc(void** data) = 0;
+class IAllocator {
+ public:
+  virtual ~IAllocator() = default;
+  virtual void alloc(int size, uint8_t** data) = 0;
+  virtual void dealloc(uint8_t** data) = 0;
+  virtual DeviceType get_device_type() const = 0;
 };
 
-using AllocatorPtr = std::shared_ptr<Allocator>;
+DEFINE_SHARED_PTR(IAllocator);
 
-class CPUAllocator : public Allocator {
+template <typename Derived>
+class AllocatorBase : public IAllocator {
  public:
-  CPUAllocator();
-  ~CPUAllocator() override;
+  AllocatorBase() = default;
+  virtual ~AllocatorBase() = default;
 
-  /**
-   * @brief 分配指定大小的内存
-   * @param size 要分配的字节数
-   * @param[out] data 指向分配内存的指针的指针
-   * @throw std::bad_alloc 内存分配失败时抛出
-   * @see <a href="https://en.cppreference.com/w/cpp/memory/new/operator_new">operator new[]</a>
-   * @todo 参考https://github.com/microsoft/mimalloc，tcmalloc和jellalloc，优化当前alloc实现
-   */
-  void alloc(int size, void** data) override;
-  void dealloc(void** data) override;
+  // 使用 CRTP 调用派生类的实现
+  void alloc(int size, uint8_t** data);
+
+  void dealloc(uint8_t** data);
+  // 获取分配器类型
+  DeviceType get_device_type() const;
 };
 
-class GPUAllocator : public Allocator {
+class CPUAllocator : public AllocatorBase<CPUAllocator> {
  public:
-  GPUAllocator();
-  ~GPUAllocator() override;
-  void alloc(int size, void** data) override;
-  void dealloc(void** data) override;
+  CPUAllocator() = default;
+  ~CPUAllocator() override = default;
+
+  void alloc_impl(int size, uint8_t** data);
+
+  void dealloc_impl(uint8_t** data);
+
+  DeviceType get_device_type_impl() const;
 };
 
-static AllocatorPtr getAllocator(DeviceType device_type) {
-  switch (device_type) {
-    case DeviceType::CPU:
-      return std::make_shared<CPUAllocator>();
-    // Add other device types as needed
-    case DeviceType::GPU:
-      return std::make_shared<GPUAllocator>();
-    default:
-      return nullptr;
-  }
-}
+DEFINE_SHARED_PTR(CPUAllocator);
+
 }  // namespace cllm

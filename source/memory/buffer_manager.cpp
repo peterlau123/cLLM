@@ -30,15 +30,17 @@ BufferManager &BufferManager::Builder::build(const cllm::BufferManager::Config &
 bool BufferManager::init(const cllm::BufferManager::Config &config) {
   bool ret = false;
   if (config.device_flags.has(DeviceType::CPU)) {
-    buffer_hubs_[DeviceType::CPU] = BufferHub::Builder::buildNative();
+    BufferHub::Config cfg;
+    cfg.allocator = config.cpu.alloc;
+    buffer_hubs_[DeviceType::CPU] = BufferHub::Builder::build(cfg);
   }
   return ret;
 }
 
 void BufferManager::put(const Buffer &buffer) {}
 
-BufferManager::Buffer BufferManager::fetch(size_t size, DeviceType device_type) {
-  BufferManager::Buffer buffer;
+Buffer BufferManager::fetch(size_t size, DeviceType device_type) {
+  Buffer buffer;
   return buffer;
 }
 
