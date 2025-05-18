@@ -16,6 +16,8 @@ class BufferHub {
 
     static void destroy(BufferHub** hub);
   };
+
+ private:
 };
 
 

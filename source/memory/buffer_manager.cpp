@@ -43,8 +43,9 @@ BufferManager::Buffer BufferManager::fetch(size_t size, DeviceType device_type) 
 }
 
 BufferManager::~BufferManager() {
-  for (auto p : buffer_hubs_) BufferHub::Builder::destroy(&(p.second));
-}
+  for (auto p : buffer_hubs_) {
+    BufferHub::Builder::destroy(&(p.second));
+  }
 }
 
 

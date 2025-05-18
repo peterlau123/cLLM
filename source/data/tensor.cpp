@@ -43,7 +43,7 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   // Check if the data type is valid
   ASSERT(dtype >= DataType::INT8 && dtype < DataType::TOTAL, "Invalid data type");
   // Check if the device type is valid
-  ASSERT(device >= DeviceType::CPU && device < DeviceType::TOTAL, "Invalid device type");
+  ASSERT(device >= DeviceType::CPU && device <= DeviceType::METAL, "Invalid device type");
   // Calculate the total size of the tensor
   size_ = 1;
   for (const auto& dim : dims_) {
