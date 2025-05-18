@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "cLLM/parser.h"
+#include "cLLM/parser/parser.h"
 #include "cLLM/pipeline.h"
 
 namespace cllm {

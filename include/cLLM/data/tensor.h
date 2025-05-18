@@ -1,8 +1,10 @@
 #pragma once
 #include <cstdint>
+#include <functional>
 #include <vector>
 
-#include "../memory/buffer.h"
+#include "../common/device.h"
+#include "../common/dtype.h"
 #include "../utils/macros.h"
 
 namespace cllm {
@@ -16,20 +18,12 @@ namespace cllm {
 class Tensor {
  public:
   /**
-   * @brief 数据类型枚举
+   * @brief 数据来源枚举
    */
-  enum class DataType {
-    UNKNOWN = -1,  ///< 未知类型
-    INT8,          ///< 8位整数
-    UINT8,         ///< 8位无符号整数
-    INT16,         ///< 16位整数
-    UINT16,        ///< 16位无符号整数
-    INT32,         ///< 32位整数
-    UINT32,        ///< 32位无符号整数
-    FLOAT32,       ///< 32位浮点数
-    FLOAT64,       ///< 64位浮点数
-    BOOL,          ///< 布尔类型
-    TOTAL          ///< 类型总数
+  enum class DataSourceType {
+    UNKNOWN = -1,
+    MANUAL,  // Marked data managed by user including allocation and de-allocation
+    AUTO     // Marked data managed by framework
   };
 
   /**
@@ -69,13 +63,6 @@ class Tensor {
          DataType dtype,
          DeviceType device,
          Deleter deleter = DefaultDeletor());
-
-  /**
-   * @brief 从Buffer构造张量
-   *
-   * @param buffer_ptr 指向Buffer的智能指针
-   */
-  Tensor(const BufferPtr& buffer_ptr);
 
   /**
    * @brief 拷贝构造函数
@@ -128,11 +115,11 @@ class Tensor {
    */
   int size() const { return size_; }
 
-  DataType dtype() const { return dtype_; }
+  DataType dtype() const { return m_dtype_; }
 
-  DeviceType device() const { return device_; }
+  DeviceType device() const { return m_device_; }
 
-  uint8_t* data() const { return reinterpret_cast<uint8_t*>(buffer_->data()); }
+  uint8_t* data() const { return reinterpret_cast<uint8_t*>(data_); }
 
   /**
    * @brief 析构函数
@@ -142,10 +129,11 @@ class Tensor {
  private:
   std::vector<uint32_t> dims_;  ///< 张量的维度数组
   int size_;                    ///< 元素总数
-  BufferPtr buffer_;            ///< 数据缓冲区
-  DataType dtype_;              ///< 数据类型
-  DeviceType device_;           ///< 设备类型
-  int ref_count_;               ///< 引用计数
+  void* data_;                  ///< 数据缓冲区
+  DataSourceType m_data_source_;
+  DataType m_dtype_;     ///< 数据类型
+  DeviceType m_device_;  ///< 设备类型
+  int ref_count_;        ///< 引用计数
 };
 
 }  // namespace cllm

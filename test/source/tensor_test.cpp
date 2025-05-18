@@ -1,4 +1,5 @@
-#include <cLLM/tensor.h>
+#include "cLLM/data/tensor.h"
+
 #include <gtest/gtest.h>
 
 using namespace cllm;

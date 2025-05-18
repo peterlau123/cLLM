@@ -2,7 +2,7 @@
 
 namespace cllm {
 
+class Encoder {};
 
-struct Config {};
 
 }  // namespace cllm

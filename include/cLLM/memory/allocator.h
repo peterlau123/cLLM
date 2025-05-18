@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "../backend/device.h"
+#include "cLLM/common/device.h"
 
 namespace cllm {
 class Allocator {

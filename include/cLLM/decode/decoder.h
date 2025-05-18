@@ -2,7 +2,7 @@
 
 namespace cllm {
 
+class Decoder {};
 
-struct Config {};
 
 }  // namespace cllm
