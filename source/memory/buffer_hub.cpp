@@ -14,6 +14,7 @@ BufferHub* BufferHub::Builder::build(const Config& config) {
   for (auto v : config.size_levels) {
     hub->addSizeLevel(v);
   }
+  // TODO:other
   return hub;
 }
 
@@ -27,8 +28,8 @@ void BufferHub::addSizeLevel(const Size& level_sz) {
       std::find_if(m_config_.size_levels.begin(),
                    m_config_.size_levels.end(),
                    [&](const auto& item) { return level_sz.totalBytes() == item.totalBytes(); });
-  if (m_config_.size_levels.end() == it) {
-    return;
+  if (m_config_.size_levels.end() != it) {
+    buffers_[level_sz] = std::list<Block>();
   }
 }
 
@@ -54,17 +55,20 @@ Block BufferHub::getBlock(const Size& sz) {
         return b;
       }
     }
-    // traverse to upper levels
+    // traverse to upper or lower levels
+    // For upper levels, we need to split
+    // For lower levels, we need to coalesce
   }
   return block;
+}
+
+void BufferHub::putBlock(const Block& block) {
+  // TODO
 }
 
 BufferHub::Size BufferHub::gradeLevel(const BufferHub::Size& sz) const {
   // TODO
 }
 
-void BufferHub::putBlock(const Block& block) {
-  // TODO
-}
 
 }  // namespace cllm

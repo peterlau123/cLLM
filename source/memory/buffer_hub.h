@@ -30,6 +30,12 @@ class BufferHub {
     std::size_t operator()(const Size& s) const { return std::hash<uint64_t>()(s.totalBytes()); }
   };
 
+  struct SizeEqual {
+    bool operator()(const Size& lhs, const Size& rhs) const {
+      return lhs.totalBytes() == rhs.totalBytes();
+    }
+  };
+
   struct Config {
     DeviceType device_type;
     std::vector<Size> size_levels;
@@ -48,21 +54,22 @@ class BufferHub {
 
   void setConfig(const Config& config) { m_config_ = config; }
 
-  void addSizeLevel(const Size& level_sz);
-
-  void eraseSizeLevel(const Size& level_sz);
-
   Block getBlock(const Size& sz);
 
   void putBlock(const Block& block);
 
  private:
+  void addSizeLevel(const Size& level_sz);
+
+  // NOTE:cautious,make sure the size level is not in use
+  void eraseSizeLevel(const Size& level_sz);
+
   void coalesce();
 
   [[nodiscard]] Size gradeLevel(const Size& sz) const;
 
   BufferHub() = default;
-  std::unordered_map<Size, std::list<Block>, SizeHash> buffers_;
+  std::unordered_map<Size, std::list<Block>, SizeHash, SizeEqual> buffers_;
   Config m_config_;
 };
 
