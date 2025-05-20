@@ -16,13 +16,22 @@ struct Block {
 class BufferHub {
  public:
   struct Size {
-    uint16_t b = 64;
+    uint16_t b = 0;
     uint16_t kb = 0;
     uint16_t mb = 0;
     uint16_t gb = 0;
+    int level = -1;
 
     [[nodiscard]] uint64_t totalBytes() const {
       return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
+    }
+
+    bool operator==(const Size& rhs) const {
+      return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb && level == rhs.level;
+    }
+
+    [[nodiscard]] bool isValid() const {
+      return (b != 0 || kb != 0 || mb != 0 || gb != 0) && 0 <= level;
     }
   };
 
@@ -38,8 +47,8 @@ class BufferHub {
 
   struct Config {
     DeviceType device_type;
-    std::vector<Size> size_levels;
-    Size size_limit {0, 0, 0, 4};  // Memory in buffer hub cannot exceed this limit
+    std::vector<Size> size_levels;  // ensure that levels are in ascending order
+    Size size_limit {0, 0, 0, 4};   // Memory in buffer hub cannot exceed this limit
     float warning_level =
         0.95;  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
     IAllocatorPtr allocator;
@@ -52,7 +61,7 @@ class BufferHub {
     static void destroy(BufferHub** hub);
   };
 
-  void setConfig(const Config& config) { m_config_ = config; }
+  void setConfig(const Config& config);
 
   Block getBlock(const Size& sz);
 
@@ -63,6 +72,10 @@ class BufferHub {
 
   // NOTE:cautious,make sure the size level is not in use
   void eraseSizeLevel(const Size& level_sz);
+
+  Size findNextLevel(const Size& level_sz) const;
+
+  Size findPrevLevel(const Size& level_sz) const;
 
   void coalesce();
 

@@ -1,10 +1,9 @@
 #include "buffer_hub.h"
 
-#include <spdlog/spdlog.h>
-
 #include <algorithm>
 
 #include "cLLM/memory/allocator.h"
+#include "cLLM/utils/log.h"
 
 namespace cllm {
 
@@ -22,6 +21,11 @@ void BufferHub::Builder::destroy(cllm::BufferHub** hub) {
   // TODO:destroy whole hub
 }
 
+void BufferHub::setConfig(const Config& config) {
+  m_config_ = config;
+  // TODO: ensure that the config values are valid
+}
+
 void BufferHub::addSizeLevel(const Size& level_sz) {
   uint64_t total_bytes = level_sz.totalBytes();
   auto it =
@@ -36,9 +40,20 @@ void BufferHub::addSizeLevel(const Size& level_sz) {
 void BufferHub::eraseSizeLevel(const Size& level_sz) {
   if (0 != buffers_.count(level_sz)) {
     auto& block_list = buffers_[level_sz];
-    // TODO:do destroy for each block
+    // TODO:do destroy for each block, can only be destroyed when any block is not referenced
   }
 }
+
+BufferHub::Size BufferHub::findNextLevel(const Size& level_sz) const {
+  int level = level_sz.level;
+  if (level <= m_config_.size_levels.size() - 1) {
+    return m_config_.size_levels[level + 1];
+  }
+  LOG_WARN("No next level found");
+  return Size();
+}
+
+BufferHub::Size BufferHub::findPrevLevel(const Size& lavel_sz) const {}
 
 void BufferHub::coalesce() {}
 
@@ -55,7 +70,13 @@ Block BufferHub::getBlock(const Size& sz) {
         return b;
       }
     }
-    // traverse to upper or lower levels
+    // traverse to upper levels
+    auto next_sz = findNextLevel(level_sz);
+    if (next_sz.isValid()) {  // find next level
+      // check whether next level has enough space
+    } else {
+      // TODO:allocate new block
+    }
     // For upper levels, we need to split
     // For lower levels, we need to coalesce
   }
