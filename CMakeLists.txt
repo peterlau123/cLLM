@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 # ===================== Project Options =====================
 option(CLLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
 option(CLLM_BUILD_TESTS "Build tests with GTest" OFF)
+option(CLLM_INTEGRATE_TVM "Integrate TVM" OFF)
 
 # ===================== Project Info ========================
 project(
@@ -19,6 +20,11 @@ if(CLLM_ENABLE_LOGGING)
 endif()
 if(CLLM_BUILD_TESTS)
   find_package(GTest REQUIRED)
+endif()
+
+# Find TVM package provided by Conan, only if integration is enabled
+if(CLLM_INTEGRATE_TVM)
+  find_package(tvm CONFIG REQUIRED)
 endif()
 
 # ===================== Build Guards ========================
@@ -75,6 +81,9 @@ endif()
 set(DEPENDENCY_LIST fmt::fmt)
 if(CLLM_ENABLE_LOGGING)
   list(APPEND DEPENDENCY_LIST spdlog::spdlog)
+endif()
+if(CLLM_INTEGRATE_TVM)
+  list(APPEND DEPENDENCY_LIST tvm::tvm)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST})
 
