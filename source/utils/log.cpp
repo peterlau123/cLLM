@@ -1,12 +1,16 @@
 #include "clLM/utils/log.h"
 
+#include <fmt/format.h>
+
 namespace cllm {
 
-void Logger::init(const std::string& name = "cLLM",
-                  const std::string& logFile = "cLLM.log",
-                  spdlog::level::level_enum level = spdlog::level::info) {
+void Logger::init(const std::string& name,
+                  const std::string& logFile,
+                  spdlog::level::level_enum level) {
   try {
-    // Create console sink
+    // Refer to
+    // https://github.com/gabime/spdlog?tab=readme-ov-file#logger-with-multi-sinks---each-with-a-different-format-and-log-level
+    //  Create console sink
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(level);
 
@@ -32,9 +36,8 @@ void Logger::init(const std::string& name = "cLLM",
     // Set as default logger
     spdlog::set_default_logger(logger_);
   } catch (const spdlog::spdlog_ex& ex) {
-    std::cerr << "Log initialization failed: " << ex.what() << std::endl;
+    fmt::print("Log initialization failed: {}\n", ex.what());
   }
 }
-
 
 }  // namespace cllm
