@@ -1,7 +1,7 @@
 #pragma once
 
-namespace cllm {
+namespace nova_llm {
 
 class Tokenizer {};
 
-}  // namespace cllm
+}  // namespace nova_llm

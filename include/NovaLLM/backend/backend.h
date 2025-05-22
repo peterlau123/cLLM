@@ -1,8 +1,8 @@
 #pragma once
 
-namespace cllm {
+namespace nova_llm {
 
 class Backend {};
 
 
-}  // namespace cllm
+}  // namespace nova_llm

@@ -1,8 +1,8 @@
 #pragma once
 
-namespace cllm {
+namespace nova_llm {
 
 
 struct Config {};
 
-}  // namespace cllm
+}  // namespace nova_llm

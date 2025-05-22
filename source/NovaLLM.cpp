@@ -1,7 +1,7 @@
 #include <fmt/format.h>
 
 #include "EngineImpl.h"
-#include "NovaLLM/cLLM-cpp.h"
+#include "NovaLLM/NovaLLM-cpp.h"
 #include "NovaLLM/utils/log.h"
 
 namespace nova_llm {
