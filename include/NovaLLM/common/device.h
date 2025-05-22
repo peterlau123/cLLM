@@ -1,29 +1,21 @@
 #pragma once
 
-namespace cllm {
+#include "NovaLLM/utils/macros.h"
 
-enum class DeviceType : uint32_t { UNKNOWN = 0, CPU = 0x1, GPU = 0x2, METAL = 0x4 };
+namespace nova_llm {
 
-class DeviceTypeFlags {
+enum class DeviceType { CPU = 0, CUDA, METAL, UNKNOWN };
+
+class NOVA_LLM_API Device {
  public:
-  constexpr DeviceTypeFlags() : flags(0) {}
+  Device() = default;
+  virtual ~Device() = default;
 
-  constexpr DeviceTypeFlags(DeviceType type) : flags(static_cast<uint32_t>(type)) {}
-
-  // 检查是否支持设备
-  constexpr bool has(DeviceType type) const;
-
-  // 添加设备
-  constexpr void set(DeviceType type);
-
-  // 移除设备
-  constexpr void clear(DeviceType type);
-
-  // 获取所有设备
-  constexpr DeviceType get() const;
-
- private:
-  uint32_t flags;
+  virtual bool init() = 0;
+  virtual bool isAvailable() const = 0;
+  virtual DeviceType type() const = 0;
 };
 
-}  // namespace cllm
+using DevicePtr = std::shared_ptr<Device>;
+
+}  // namespace nova_llm

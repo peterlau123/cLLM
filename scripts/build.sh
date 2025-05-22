@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# cLLM build script
+# NovaLLM build script
 # Usage: ./build.sh [options]
 # Options:
 #   -d, --debug     Build in debug mode
@@ -116,8 +116,8 @@ fi
 print_message "green" "Configuring project..."
 if ! cmake .. \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DCLLM_BUILD_TESTS="$ENABLE_TESTS" \
-    -DCLLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
+    -DNOVALLM_BUILD_TESTS="$ENABLE_TESTS" \
+    -DNOVALLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
     print_message "red" "CMake configuration failed"
     exit 1
 fi

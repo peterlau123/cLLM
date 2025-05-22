@@ -1,3 +1,5 @@
-#include "cLLM/model/model.h"
+#include "NovaLLM/model/model.h"
 
-namespace cllm {}
+namespace nova_llm {
+// Implementation
+}  // namespace nova_llm

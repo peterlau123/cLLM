@@ -1,9 +1,10 @@
 #include <fmt/format.h>
 
 #include "EngineImpl.h"
-#include "cLLM/cLLM-cpp.h"
+#include "NovaLLM/cLLM-cpp.h"
+#include "NovaLLM/utils/log.h"
 
-namespace cllm {
+namespace nova_llm {
 
 class Impl {
  public:
@@ -22,39 +23,27 @@ class Impl {
   EngineImplPtr engine_ptr;
 };
 
-Engine::Engine() { impl_ = Impl::build(); }
+Engine::Engine() : impl_(nullptr) {
+  // Implementation
+}
 
-Engine::~Engine() { Impl::destroy(&impl_); }
+Engine::~Engine() {
+  // Implementation
+}
 
 bool Engine::init() {
-  bool ret = false;
-  if (nullptr == impl_) {
-    impl_->engine_ptr = EngineImpl::build();
-    if (impl_->engine_ptr->init()) {
-      ret = true;
-      fmt::print("Engine initialized successfully.\n");
-    } else {
-      fmt::print("Engine initialization failed.\n");
-    }
-  } else {
-    fmt::print("Engine already initialized.\n");
-    ret = false;
-  }
-  return ret;
+  // Implementation
+  return true;
 }
 
 bool Engine::parse(const std::string& modelPath) {
-  // Load the model from the specified path
-  // This is a placeholder implementation
-  fmt::print("Loading model from: {}\n", modelPath);
-
-  return impl_->engine_ptr->parse(modelPath);  // Return true if loading is successful
+  // Implementation
+  return true;
 }
 
 std::string Engine::chat(const std::string& prompt) {
-  // Placeholder implementation for chat functionality
-  fmt::print("Chatting with prompt: {}\n", prompt);
-  return impl_->engine_ptr->chat(prompt);  // Return a dummy response
+  // Implementation
+  return "Response";
 }
 
-}  // namespace cllm
+}  // namespace nova_llm

@@ -5,9 +5,9 @@
 
 #include "../common/device.h"
 #include "../common/dtype.h"
-#include "../utils/macros.h"
+#include "NovaLLM/utils/macros.h"
 
-namespace cllm {
+namespace nova_llm {
 
 /**
  * @brief 张量类，用于表示和操作多维数组数据
@@ -136,4 +136,4 @@ class Tensor {
   int ref_count_;        ///< 引用计数
 };
 
-}  // namespace cllm
+}  // namespace nova_llm

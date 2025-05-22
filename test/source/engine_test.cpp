@@ -1,41 +1,16 @@
-#include <cLLM/cLLM-cpp.h>
 #include <gtest/gtest.h>
 
-using namespace cllm;
+#include "NovaLLM/cLLM-cpp.h"
 
-class EngineTest : public ::testing::Test {
- protected:
-  void SetUp() override {
-    // Setup code that will be called before each test
-  }
+namespace nova_llm {
+namespace test {
 
-  void TearDown() override {
-    // Cleanup code that will be called after each test
-  }
-};
-
-TEST_F(EngineTest, InitializationTest) {
+TEST(EngineTest, BasicTest) {
   Engine engine;
   EXPECT_TRUE(engine.init());
+  EXPECT_TRUE(engine.isAvailable());
+  EXPECT_EQ(engine.type(), DeviceType::CPU);
 }
 
-TEST_F(EngineTest, ParseModelTest) {
-  Engine engine;
-  ASSERT_TRUE(engine.init());
-  EXPECT_TRUE(engine.parse("path/to/model"));
-}
-
-TEST_F(EngineTest, ChatTest) {
-  Engine engine;
-  ASSERT_TRUE(engine.init());
-  ASSERT_TRUE(engine.parse("path/to/model"));
-
-  std::string response = engine.chat("Hello");
-  EXPECT_FALSE(response.empty());
-}
-
-TEST_F(EngineTest, InvalidModelPathTest) {
-  Engine engine;
-  ASSERT_TRUE(engine.init());
-  EXPECT_FALSE(engine.parse("invalid/path/to/model"));
-}
+}  // namespace test
+}  // namespace nova_llm

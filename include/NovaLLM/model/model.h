@@ -1,16 +1,19 @@
 #pragma once
-#include "../utils/template.h"
 
-namespace cllm {
+#include "NovaLLM/utils/macros.h"
 
-class QwenModel {};
-DEFINE_SHARED_PTR(QwenModel);
+namespace nova_llm {
 
-class DeepSeekModel {};
-DEFINE_SHARED_PTR(DeepSeekModel);
+class NOVA_LLM_API Model {
+ public:
+  Model() = default;
+  virtual ~Model() = default;
 
-class LlamaModel {};
-DEFINE_SHARED_PTR(LlamaModel);
+  virtual bool init() = 0;
+  virtual bool load(const std::string& path) = 0;
+  virtual bool unload() = 0;
+};
 
+using ModelPtr = std::shared_ptr<Model>;
 
-}  // namespace cllm
+}  // namespace nova_llm

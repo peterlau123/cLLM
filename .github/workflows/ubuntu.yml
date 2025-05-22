@@ -49,8 +49,8 @@ jobs:
           conan install .. --output-folder=. --build=missing
           cmake .. \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DCLLM_BUILD_TESTS=${{ matrix.enable_tests }} \
-            -DCLLM_ENABLE_LOGGING=${{ matrix.enable_logging }} \
+            -DNOVA_LLM_BUILD_TESTS=${{ matrix.enable_tests }} \
+            -DNOVA_LLM_ENABLE_LOGGING=${{ matrix.enable_logging }} \
             -DENABLE_TEST_COVERAGE=${{ matrix.build_type == 'Debug' }}
 
       - name: Build

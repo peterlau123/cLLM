@@ -1,9 +1,10 @@
-#include "cLLM/data/tensor.h"
+#include "NovaLLM/data/tensor.h"
 
-#if CLLM_BUILD_TESTS
 #include <gtest/gtest.h>
 
-using namespace cllm;
+#if NOVA_LLM_BUILD_TESTS
+
+using namespace nova_llm;
 
 class TensorTest : public ::testing::Test {
  protected:

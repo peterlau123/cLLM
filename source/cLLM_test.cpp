@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "EngineImpl.h"
-#include "cLLM/cLLM-cpp.h"
+#include "NovaLLM/cLLM-cpp.h"
 
-using namespace cllm;
+using namespace nova_llm;
 
 // Test fixture for EngineImpl
 class EngineImplTest : public ::testing::Test {
@@ -19,32 +18,32 @@ class EngineImplTest : public ::testing::Test {
 
 // Test initialization
 TEST_F(EngineImplTest, InitializationTest) {
-  EngineImpl engine;
-  EXPECT_TRUE(engine.init());
+  auto engine = std::make_unique<Engine>();
+  EXPECT_TRUE(engine->init());
 }
 
 // Test model parsing
 TEST_F(EngineImplTest, ParseModelTest) {
-  EngineImpl engine;
-  ASSERT_TRUE(engine.init());
-  EXPECT_TRUE(engine.parse("path/to/model"));
+  auto engine = std::make_unique<Engine>();
+  EXPECT_TRUE(engine->init());
+  EXPECT_TRUE(engine->parse("test_model.bin"));
 }
 
 // Test chat functionality
 TEST_F(EngineImplTest, ChatTest) {
-  EngineImpl engine;
-  ASSERT_TRUE(engine.init());
-  ASSERT_TRUE(engine.parse("path/to/model"));
+  auto engine = std::make_unique<Engine>();
+  EXPECT_TRUE(engine->init());
+  EXPECT_TRUE(engine->parse("test_model.bin"));
 
-  std::string response = engine.chat("Hello");
+  std::string response = engine->chat("Hello");
   EXPECT_FALSE(response.empty());
 }
 
 // Test invalid model path
 TEST_F(EngineImplTest, InvalidModelPathTest) {
-  EngineImpl engine;
-  ASSERT_TRUE(engine.init());
-  EXPECT_FALSE(engine.parse("invalid/path/to/model"));
+  auto engine = std::make_unique<Engine>();
+  EXPECT_TRUE(engine->init());
+  EXPECT_FALSE(engine->parse("invalid/path/to/model"));
 }
 
 // Main function to run all tests

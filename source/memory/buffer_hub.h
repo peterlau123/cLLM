@@ -2,11 +2,11 @@
 #include <list>
 #include <unordered_map>
 
-#include "cLLM/common/device.h"
-#include "cLLM/memory/allocator.h"
-#include "cLLM/utils/template.h"
+#include "NovaLLM/common/device.h"
+#include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/utils/template.h"
 
-namespace cllm {
+namespace nova_llm {
 struct Block {
   uint8_t* data = nullptr;
   uint64_t size = 0;
@@ -86,4 +86,4 @@ class BufferHub {
   Config m_config_;
 };
 
-}  // namespace cllm
+}  // namespace nova_llm

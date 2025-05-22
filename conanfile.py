@@ -12,8 +12,8 @@ class NovaLLMConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "log_spdlog": [True, False], # Corresponds to CLLM_ENABLE_LOGGING
-        "build_tests": [True, False], # Corresponds to CLLM_BUILD_TESTS
+        "log_spdlog": [True, False], # Corresponds to NOVA_LLM_ENABLE_LOGGING
+        "build_tests": [True, False], # Corresponds to NOVA_LLM_BUILD_TESTS
         "integrate_tvm": [True, False], # Option to integrate TVM
     }
 
@@ -44,6 +44,31 @@ class NovaLLMConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
+
+    def configure(self):
+        if self.options.shared:
+            self.options.rm_safe("fPIC")
+
+    def generate(self):
+        deps = CMakeDeps(self)
+        deps.generate()
+        tc = CMakeToolchain(self)
+        tc.variables["NOVA_LLM_ENABLE_LOGGING"] = self.options.log_spdlog
+        tc.variables["NOVA_LLM_BUILD_TESTS"] = self.options.build_tests
+        tc.generate()
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
+    def package(self):
+        cmake = CMake(self)
+        cmake.install()
+        copy(self, "LICENSE", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"))
+
+    def package_info(self):
+        self.cpp_info.libs = ["NovaLLM"]
 
     # Note: For a project conanfile.py, you typically don't implement build(), package(), etc.
     # Those are for creating packages of YOUR project. This conanfile is just for managing requirements. 

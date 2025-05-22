@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
 # ===================== Project Options =====================
-option(CLLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
-option(CLLM_BUILD_TESTS "Build tests with GTest" OFF)
-option(CLLM_INTEGRATE_TVM "Integrate TVM" OFF)
+option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
+option(NOVA_LLM_BUILD_TESTS "Build tests with GTest" OFF)
+option(NOVA_LLM_INTEGRATE_TVM "Integrate TVM" OFF)
 
 # ===================== Project Info ========================
 project(
@@ -16,15 +16,15 @@ project(
 
 # ===================== Conan Dependencies ==================
 find_package(fmt REQUIRED)
-if(CLLM_ENABLE_LOGGING)
+if(NOVA_LLM_ENABLE_LOGGING)
   find_package(spdlog REQUIRED)
 endif()
-if(CLLM_BUILD_TESTS)
+if(NOVA_LLM_BUILD_TESTS)
   find_package(GTest REQUIRED)
 endif()
 
 # Find TVM package provided by Conan, only if integration is enabled
-if(CLLM_INTEGRATE_TVM)
+if(NOVA_LLM_INTEGRATE_TVM)
   find_package(tvm CONFIG REQUIRED)
 endif()
 
@@ -65,7 +65,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # ===================== Test Executable ====================
-if(CLLM_BUILD_TESTS)
+if(NOVA_LLM_BUILD_TESTS)
   add_executable(${PROJECT_NAME}_test ${test_sources})
   set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD 17)
   target_include_directories(${PROJECT_NAME}_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -80,10 +80,10 @@ endif()
 
 # ===================== Link Dependencies ===================
 set(DEPENDENCY_LIST fmt::fmt)
-if(CLLM_ENABLE_LOGGING)
+if(NOVA_LLM_ENABLE_LOGGING)
   list(APPEND DEPENDENCY_LIST spdlog::spdlog)
 endif()
-if(CLLM_INTEGRATE_TVM)
+if(NOVA_LLM_INTEGRATE_TVM)
   list(APPEND DEPENDENCY_LIST tvm::tvm)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST})
@@ -142,8 +142,8 @@ install(EXPORT ${PROJECT_NAME}Targets
 
 # ===================== Summary =============================
 message(STATUS "\n==== NovaLLM Configuration Summary ====")
-message(STATUS "  Logging:         ${CLLM_ENABLE_LOGGING}")
-message(STATUS "  Build tests:     ${CLLM_BUILD_TESTS}")
+message(STATUS "  Logging:         ${NOVA_LLM_ENABLE_LOGGING}")
+message(STATUS "  Build tests:     ${NOVA_LLM_BUILD_TESTS}")
 message(STATUS "  Install prefix:  ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "  C++ Standard:    17")
 message(STATUS "  Conan deps:      fmt, spdlog, gtest")

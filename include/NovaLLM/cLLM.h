@@ -4,6 +4,6 @@
 
 typedef void* EngineHandle;
 
-bool CLLM_API init_engine();
+bool NOVA_LLM_API init_engine();
 
-bool CLLM_API load_model(EngineHandle hdl, const char* model_path);
+bool NOVA_LLM_API load_model(EngineHandle hdl, const char* model_path);

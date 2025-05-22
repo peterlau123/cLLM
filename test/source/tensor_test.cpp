@@ -1,8 +1,9 @@
-#include "cLLM/data/tensor.h"
+#include "NovaLLM/data/tensor.h"
 
 #include <gtest/gtest.h>
 
-using namespace cllm;
+namespace nova_llm {
+namespace test {
 
 class TensorTest : public ::testing::Test {
  protected:
@@ -53,3 +54,12 @@ TEST_F(TensorTest, InvalidReshapeTest) {
   Tensor tensor({2, 3});
   EXPECT_THROW(tensor.reshape({2, 2}), std::invalid_argument);
 }
+
+TEST(TensorTest, BasicTest) {
+  Tensor tensor(10);
+  EXPECT_EQ(tensor.size(), 10);
+  EXPECT_NE(tensor.data(), nullptr);
+}
+
+}  // namespace test
+}  // namespace nova_llm

@@ -1,10 +1,10 @@
-#include "cLLM/memory/buffer_manager.h"
+#include "NovaLLM/memory/buffer_manager.h"
 
+#include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/utils/macros.h"
 #include "buffer_hub.h"
-#include "cLLM/memory/allocator.h"
-#include "cLLM/utils/macros.h"
 
-namespace cllm {
+namespace nova_llm {
 
 constexpr bool DeviceTypeFlags::has(DeviceType type) const {
   return (flags & static_cast<uint32_t>(type)) != 0;
@@ -19,7 +19,7 @@ constexpr void DeviceTypeFlags::clear(DeviceType type) { flags &= ~static_cast<u
 // 获取所有设备
 constexpr DeviceType DeviceTypeFlags::get() const { return static_cast<DeviceType>(flags); }
 
-BufferManager &BufferManager::Builder::build(const cllm::BufferManager::Config &config) {
+BufferManager &BufferManager::Builder::build(const nova_llm::BufferManager::Config &config) {
   static BufferManager buffer_manager;
   if (!buffer_manager.isInited()) {
     auto ret = buffer_manager.init(config);
@@ -27,7 +27,7 @@ BufferManager &BufferManager::Builder::build(const cllm::BufferManager::Config &
   return buffer_manager;
 }
 
-bool BufferManager::init(const cllm::BufferManager::Config &config) {
+bool BufferManager::init(const nova_llm::BufferManager::Config &config) {
   bool ret = false;
   if (config.device_flags.has(DeviceType::CPU)) {
     BufferHub::Config cfg;
@@ -51,4 +51,4 @@ BufferManager::~BufferManager() {
 }
 
 
-}  // namespace cllm
+}  // namespace nova_llm

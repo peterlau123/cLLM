@@ -1,10 +1,8 @@
-#include "cLLM/data/tensor.h"
+#include "NovaLLM/data/tensor.h"
 
-#include "cLLm/utils/macros.h"
+#include "NovaLLM/utils/macros.h"
 
-using namespace cllm;
-
-namespace {
+namespace nova_llm {
 
 uint64_t getByteSize(DataType dtype) {
   switch (dtype) {
@@ -28,8 +26,6 @@ uint64_t getByteSize(DataType dtype) {
       return 0;
   }
 }
-
-}  // namespace
 
 Tensor::Tensor() : dims_(), size_(0), m_dtype_(DataType::UNKNOWN), m_device_(DeviceType::UNKNOWN) {}
 
@@ -78,3 +74,5 @@ Tensor& Tensor::operator+(const Tensor& rhs) {
 }
 
 Tensor::~Tensor() {}
+
+}  // namespace nova_llm

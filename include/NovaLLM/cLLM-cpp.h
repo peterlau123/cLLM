@@ -1,29 +1,23 @@
 #pragma once
-#include <memory>
-#include <string>
 
-#include "config.h"
-#include "utils/macros.h"
+#include "NovaLLM/common/device.h"
+#include "NovaLLM/data/tensor.h"
+#include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/model/model.h"
+#include "NovaLLM/utils/macros.h"
 
-namespace cllm {
+namespace nova_llm {
 
-class Impl;
-
-class CLLM_API Engine {
+class NOVA_LLM_API Engine {
  public:
-  Engine();
+  Engine() = default;
+  virtual ~Engine() = default;
 
-  ~Engine();
-
-  bool init();
-
-  // Load a model from a file
-  bool parse(const std::string& modelPath);
-
-  std::string chat(const std::string& prompt);
-
- private:
-  Impl* impl_;  // Pointer to the implementation details
+  virtual bool init() = 0;
+  virtual bool isAvailable() const = 0;
+  virtual DeviceType type() const = 0;
 };
 
-}  // namespace cllm
+using EnginePtr = std::shared_ptr<Engine>;
+
+}  // namespace nova_llm

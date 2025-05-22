@@ -50,10 +50,10 @@ jobs:
           mkdir -p build
           cd build
           conan install .. --output-folder=. --build=missing
-          cmake .. \
+          cmake -B build \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCLLM_BUILD_TESTS=OFF \
-            -DCLLM_ENABLE_LOGGING=OFF
+            -DNOVA_LLM_BUILD_TESTS=OFF \
+            -DNOVA_LLM_ENABLE_LOGGING=OFF
 
       - name: Build documentation
         run: |

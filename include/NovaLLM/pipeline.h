@@ -1,21 +1,29 @@
 #pragma once
 #include <memory>
 
-#include "cLLM/decode/decoder.h"
-#include "cLLM/encode/encoder.h"
+#include "NovaLLM/decode/decoder.h"
+#include "NovaLLM/encode/encoder.h"
+#include "NovaLLM/utils/macros.h"
 #include "model/model.h"
 #include "tokenizer.h"
 
-namespace cllm {
+namespace nova_llm {
 
-class Pipeline {
+class NOVA_LLM_API Pipeline {
  public:
-  Pipeline() = default;
+  Pipeline();
 
-  virtual ~Pipeline() = default;
+  ~Pipeline();
+
+  bool init();
+  bool process(const std::string& input, std::string& output);
 
   // Add methods for pipeline processing
   virtual void process() = 0;
+
+ private:
+  std::unique_ptr<Decoder> decoder_;
+  std::unique_ptr<Encoder> encoder_;
 };
 
 using PipelinePtr = std::shared_ptr<Pipeline>;
@@ -40,4 +48,4 @@ PipelinePtr createPipeline() {
   return std::make_shared<T>();
 }
 
-}  // namespace cllm
+}  // namespace nova_llm

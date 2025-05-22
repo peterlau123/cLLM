@@ -3,10 +3,10 @@
 include(CMakeFindDependencyMacro)
 
 find_dependency(fmt)
-if(@CLLM_ENABLE_LOGGING@)
+if(@NOVA_LLM_ENABLE_LOGGING@)
     find_dependency(spdlog)
 endif()
-if(@CLLM_BUILD_TESTS@)
+if(@NOVA_LLM_BUILD_TESTS@)
     find_dependency(GTest)
 endif()
 
