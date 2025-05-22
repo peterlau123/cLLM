@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
-project(cLLMTests LANGUAGES CXX)
+project(NovaLLMTests LANGUAGES CXX)
 
 # ---- Options ----
 
@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME} ${sources})
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
-    CONAN_PKG::cLLM
+    CONAN_PKG::NovaLLM
     CONAN_PKG::gtest
     CONAN_PKG::fmt
 )

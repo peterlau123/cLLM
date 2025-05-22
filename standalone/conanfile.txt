@@ -1,5 +1,5 @@
 [requires]
-cLLM/0.1.0
+NovaLLM/0.1.0
 cxxopts/3.0.0
 
 [generators]

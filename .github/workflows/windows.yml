@@ -76,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.build_type }}-${{ matrix.enable_logging }}-${{ matrix.generator }}
-          path: build/cLLM.dll
+          path: build/NovaLLM.dll
           if-no-files-found: error

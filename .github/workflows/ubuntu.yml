@@ -74,5 +74,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ubuntu-${{ matrix.build_type }}-${{ matrix.enable_logging }}
-          path: build/libcLLM.so
+          path: build/libNovaLLM.so
           if-no-files-found: error

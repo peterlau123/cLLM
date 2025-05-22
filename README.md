@@ -1,16 +1,16 @@
-[![Ubuntu](https://github.com/peterlau123/cLLM/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/ubuntu.yml)
-[![Windows](https://github.com/peterlau123/cLLM/actions/workflows/windows.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/windows.yml)
-[![Code Quality](https://github.com/peterlau123/cLLM/actions/workflows/code-quality.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/code-quality.yml)
-[![Documentation](https://github.com/peterlau123/cLLM/actions/workflows/documentation.yml/badge.svg)](https://github.com/peterlau123/cLLM/actions/workflows/documentation.yml)
-[![codecov](https://codecov.io/gh/peterlau123/cLLM/branch/master/graph/badge.svg)](https://codecov.io/gh/peterlau123/cLLM)
+[![Ubuntu](https://github.com/peterlau123/NovaLLM/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/peterlau123/NovaLLM/actions/workflows/ubuntu.yml)
+[![Windows](https://github.com/peterlau123/NovaLLM/actions/workflows/windows.yml/badge.svg)](https://github.com/peterlau123/NovaLLM/actions/workflows/windows.yml)
+[![Code Quality](https://github.com/peterlau123/NovaLLM/actions/workflows/code-quality.yml/badge.svg)](https://github.com/peterlau123/NovaLLM/actions/workflows/code-quality.yml)
+[![Documentation](https://github.com/peterlau123/NovaLLM/actions/workflows/documentation.yml/badge.svg)](https://github.com/peterlau123/NovaLLM/actions/workflows/documentation.yml)
+[![codecov](https://codecov.io/gh/peterlau123/NovaLLM/branch/master/graph/badge.svg)](https://codecov.io/gh/peterlau123/NovaLLM)
 
 <p align="center">
-  <img src="documentation/images/cLLM_logo.png" height="200" width="250" />
+  <img src="documentation/images/NovaLLM_logo.png" height="200" width="250" />
 </p>
 
-# cLLM
+# NovaLLM
 
-A lightweight and efficient C/C++ library for Large Language Model (LLM) inference. The **c** in cLLM stands for **crack** and **C/C++**, reflecting our goal to crack the complexities of LLM deployment and make it accessible everywhere.
+A lightweight and efficient C/C++ library for Large Language Model (LLM) inference. The name **Nova** reflects our goal to bring a new, powerful, and efficient approach to LLM deployment, making it accessible everywhere.
 
 ## Features
 
@@ -49,8 +49,8 @@ A lightweight and efficient C/C++ library for Large Language Model (LLM) inferen
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/peterlau123/cLLM.git
-cd cLLM
+git clone https://github.com/peterlau123/NovaLLM.git
+cd NovaLLM
 ```
 
 2. **Install dependencies and build**
@@ -72,7 +72,7 @@ cmake --build .
 ctest --output-on-failure
 
 # Run specific test
-./bin/cLLM_tests
+./bin/NovaLLM_tests
 ```
 
 ### Development
@@ -104,28 +104,28 @@ open build/docs/html/index.html
 ### Model Quantization
 
 ```cpp
-#include <cLLM/quantization.hpp>
+#include <NovaLLM/quantization.hpp>
 
 // Example quantization code
-auto quantized_model = cLLM::quantize_model(model, cLLM::QuantizationType::INT8);
+auto quantized_model = NovaLLM::quantize_model(model, NovaLLM::QuantizationType::INT8);
 ```
 
 ### TVM Integration
 
 ```cpp
-#include <cLLM/tvm.hpp>
+#include <NovaLLM/tvm.hpp>
 
 // Example TVM compilation
-auto compiled_model = cLLM::compile_with_tvm(model, "cuda");
+auto compiled_model = NovaLLM::compile_with_tvm(model, "cuda");
 ```
 
 ### Custom Kernel Integration
 
 ```cpp
-#include <cLLM/kernels.hpp>
+#include <NovaLLM/kernels.hpp>
 
 // Example custom kernel usage
-cLLM::register_custom_kernel("my_kernel", kernel_function);
+NovaLLM::register_custom_kernel("my_kernel", kernel_function);
 ```
 
 ## Contributing
@@ -144,9 +144,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-- GitHub Issues: [Create an issue](https://github.com/peterlau123/cLLM/issues)
+- GitHub Issues: [Create an issue](https://github.com/peterlau123/NovaLLM/issues)
 - Email: [Your email]
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=peterlau123/cLLM&type=Date)](https://star-history.com/#peterlau123/cLLM&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=peterlau123/NovaLLM&type=Date)](https://star-history.com/#peterlau123/NovaLLM&Date)

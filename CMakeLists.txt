@@ -7,10 +7,11 @@ option(CLLM_INTEGRATE_TVM "Integrate TVM" OFF)
 
 # ===================== Project Info ========================
 project(
-  cLLM
+  NovaLLM
   VERSION 0.1.0
+  DESCRIPTION "A lightweight and efficient C/C++ library for Large Language Model (LLM) inference"
   LANGUAGES CXX
-  HOMEPAGE_URL  "https://github.com/peterlau123/cLLM"
+  HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
 # ===================== Conan Dependencies ==================
@@ -140,7 +141,7 @@ install(EXPORT ${PROJECT_NAME}Targets
 )
 
 # ===================== Summary =============================
-message(STATUS "\n==== cLLM Configuration Summary ====")
+message(STATUS "\n==== NovaLLM Configuration Summary ====")
 message(STATUS "  Logging:         ${CLLM_ENABLE_LOGGING}")
 message(STATUS "  Build tests:     ${CLLM_BUILD_TESTS}")
 message(STATUS "  Install prefix:  ${CMAKE_INSTALL_PREFIX}")

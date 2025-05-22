@@ -1,9 +1,10 @@
 import os
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout, CMakeDeps, CMakeToolchain
+from conan.tools.files import copy
 
-class CLLMProjectConan(ConanFile):
-    name = "cLLM"
+class NovaLLMConan(ConanFile):
+    name = "NovaLLM"
     version = "0.1.0" # Match your project version
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"

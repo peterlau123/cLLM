@@ -111,7 +111,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=cLLM
+            -Dsonar.projectKey=NovaLLM
             -Dsonar.sources=source,include
             -Dsonar.tests=test
             -Dsonar.cpp.file.suffixes=cpp,h
