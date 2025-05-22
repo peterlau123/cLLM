@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cllm {
+namespace nova_llm {
 
 namespace Env {
 
@@ -13,4 +13,4 @@ class Environment {
 
 }  // namespace Env
 
-}  // namespace cllm
+}  // namespace nova_llm

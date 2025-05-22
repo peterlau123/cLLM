@@ -7,7 +7,7 @@
 #include "cLLM/memory/allocator.h"
 #include "cLLM/memory/buffer_define.h"
 
-namespace cllm {
+namespace nova_llm {
 /*
  * @todo: use segregated free list
  * */
@@ -54,4 +54,4 @@ class BufferManager {
   std::unordered_map<DeviceType, BufferHub*> buffer_hubs_;
 };
 
-}  // namespace cllm
+}  // namespace nova_llm

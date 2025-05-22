@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace cllm {
+namespace nova_llm {
 
 struct Buffer {
   uint8_t* data {nullptr};
@@ -10,4 +10,4 @@ struct Buffer {
 };
 
 
-}  // namespace cllm
+}  // namespace nova_llm

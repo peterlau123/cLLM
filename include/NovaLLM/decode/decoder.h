@@ -1,8 +1,8 @@
 #pragma once
 
-namespace cllm {
+namespace nova_llm {
 
 class Decoder {};
 
 
-}  // namespace cllm
+}  // namespace nova_llm

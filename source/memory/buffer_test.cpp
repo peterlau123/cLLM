@@ -1,8 +1,8 @@
-#include "cLLM/memory/buffer_manager.h"
+#include "NovaLLM/memory/buffer_manager.h"
 
-#if CLLM_BUILD_TESTS
+#if NOVA_LLM_BUILD_TESTS
 #include <gtest/gtest.h>
 
-using namespace cllm;
+using namespace nova_llm;
 
 #endif

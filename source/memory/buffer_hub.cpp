@@ -2,10 +2,10 @@
 
 #include <algorithm>
 
-#include "cLLM/memory/allocator.h"
-#include "cLLM/utils/log.h"
+#include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/utils/log.h"
 
-namespace cllm {
+namespace nova_llm {
 
 BufferHub* BufferHub::Builder::build(const Config& config) {
   BufferHub* hub = new BufferHub;
@@ -17,7 +17,7 @@ BufferHub* BufferHub::Builder::build(const Config& config) {
   return hub;
 }
 
-void BufferHub::Builder::destroy(cllm::BufferHub** hub) {
+void BufferHub::Builder::destroy(nova_llm::BufferHub** hub) {
   // TODO:destroy whole hub
 }
 
@@ -92,4 +92,4 @@ BufferHub::Size BufferHub::gradeLevel(const BufferHub::Size& sz) const {
 }
 
 
-}  // namespace cllm
+}  // namespace nova_llm
