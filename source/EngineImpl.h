@@ -2,10 +2,10 @@
 #include <string>
 #include <vector>
 
-#include "cLLM/parser/parser.h"
-#include "cLLM/pipeline.h"
+#include "NovaLLM/parser/parser.h"
+#include "NovaLLM/pipeline.h"
 
-namespace cllm {
+namespace nova_llm {
 
 class EngineImpl {
  public:
@@ -30,4 +30,4 @@ class EngineImpl {
 
 using EngineImplPtr = EngineImpl::EngineImplPtr;
 
-}  // namespace cllm
+}  // namespace nova_llm
