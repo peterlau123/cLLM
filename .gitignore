@@ -5,13 +5,9 @@ install/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 conanbuild*
 conanrun*
 conan.lock
-CMakeUserPresets.json
-CMakePresets.json
-*.cmake
 *.o
 *.obj
 *.so
