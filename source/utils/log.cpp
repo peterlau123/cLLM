@@ -1,8 +1,8 @@
-#include "clLM/utils/log.h"
+#include "NovalLM/utils/log.h"
 
 #include <fmt/format.h>
 
-namespace cllm {
+namespace nova_llm {
 
 void Logger::init(const std::string& name,
                   const std::string& logFile,
@@ -40,4 +40,4 @@ void Logger::init(const std::string& name,
   }
 }
 
-}  // namespace cllm
+}  // namespace nova_llm

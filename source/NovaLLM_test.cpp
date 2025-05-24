@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "NovaLLM/cLLM-cpp.h"
+#include "NovaLLM/NovaLLM-cpp.h"
 
 using namespace nova_llm;
 

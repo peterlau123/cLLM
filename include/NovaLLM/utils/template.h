@@ -6,10 +6,11 @@ struct SharedPtrWrapper {
   using Type = std::shared_ptr<T>;
 };
 
-#define DEFINE_SHARED_PTR(X) using X##Ptr = SharedPtrWrapper<X>::Type
+#define DEFINE_SHARED_PTR(X) using X##SharedPtr = SharedPtrWrapper<X>::Type
 
 template <typename T>
 struct UniquePtrWrapper {
   using Type = std::unique_ptr<T>;
 };
-#define DEFINE_UNIQUE_PTR(X) using X##Ptr = UniquePtrWrapper<X>::Type
+
+#define DEFINE_UNIQUE_PTR(X) using X##UniquePtr = UniquePtrWrapper<X>::Type
