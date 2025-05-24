@@ -1,10 +1,9 @@
 #pragma once
-#include <memory>
-
-#include "NovaLLM/decode/decoder.h"
-#include "NovaLLM/encode/encoder.h"
-#include "NovaLLM/utils/macros.h"
-#include "model/model.h"
+#include "../../../../../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk/usr/include/c++/v1/memory"
+#include "../decode/decoder.h"
+#include "../encode/encoder.h"
+#include "../model/model.h"
+#include "../utils/macros.h"
 #include "tokenizer.h"
 
 namespace nova_llm {
@@ -13,7 +12,7 @@ class NOVA_LLM_API Pipeline {
  public:
   Pipeline();
 
-  ~Pipeline();
+  virtual ~Pipeline();
 
   bool init();
   bool process(const std::string& input, std::string& output);
@@ -25,14 +24,13 @@ class NOVA_LLM_API Pipeline {
   std::unique_ptr<Decoder> decoder_;
   std::unique_ptr<Encoder> encoder_;
 };
-
-using PipelinePtr = std::shared_ptr<Pipeline>;
+DEFINE_SHARED_PTR(Pipeline);
 
 class Qwenpipeline : public Pipeline {
  public:
-  Qwenpipeline() = default;
+  Qwenpipeline() ;
 
-  ~Qwenpipeline() override = default;
+  ~Qwenpipeline() override;
 
   void process() override {
     // Implement the processing logic for Qwen pipeline

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "NovaLLM/parser/parser.h"
-#include "NovaLLM/pipeline.h"
+#include "NovaLLM/pipeline/pipeline.h"
 
 namespace nova_llm {
 
