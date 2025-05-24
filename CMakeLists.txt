@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
 
+# Add conan_provider.cmake to the list of files processed
+# by the project() command itself.
+# This MUST come BEFORE the project() command.
+list(APPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES cmake/conan_provider.cmake)
 
 # ===================== Project Options =====================
 option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
@@ -11,17 +15,17 @@ project(
   NovaLLM
   VERSION 0.1.0
   DESCRIPTION "A lightweight and efficient C/C++ library for Large Language Model (LLM) inference"
-  LANGUAGES CXX
+  LANGUAGES CXX C
   HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
 # Include Conan CMake integration
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan.cmake)  # Adjust the path if necessary
+#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan_provider.cmake)  # Adjust the path if necessary
 
 # Run Conan to install dependencies using conanfile.py
-conan_cmake_run(CONANFILE conanfile.py  # Specify your conanfile.py
-        BASIC_SETUP CMAKE_TARGETS
-        BUILD missing)
+#conan_cmake_run(CONANFILE conanfile.py  # Specify your conanfile.py
+#        BASIC_SETUP CMAKE_TARGETS
+#        BUILD missing)
 
 # ===================== Conan Dependencies ==================
 find_package(fmt REQUIRED)
