@@ -23,27 +23,13 @@ class Impl {
   EngineImplPtr engine_ptr;
 };
 
-Engine::Engine() : impl_(nullptr) {
-  // Implementation
-}
-
-Engine::~Engine() {
-  // Implementation
-}
-
 bool Engine::init() {
   // Implementation
   return true;
 }
 
-bool Engine::parse(const std::string& modelPath) {
-  // Implementation
-  return true;
-}
+void Engine::run() {}
 
-std::string Engine::chat(const std::string& prompt) {
-  // Implementation
-  return "Response";
-}
+Engine::~Engine() { Impl::destroy(&impl_); }
 
 }  // namespace nova_llm

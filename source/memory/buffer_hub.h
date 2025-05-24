@@ -51,7 +51,7 @@ class BufferHub {
     Size size_limit {0, 0, 0, 4};   // Memory in buffer hub cannot exceed this limit
     float warning_level =
         0.95;  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
-    IAllocatorPtr allocator;
+    IAllocatorSharedPtr allocator;
   };
 
   class Builder {

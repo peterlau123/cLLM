@@ -4,7 +4,7 @@
 
 namespace nova_llm {
 
-enum class DeviceType : uint32_t { UNKNOWN = 0, CPU, CUDA, METAL };
+enum class DeviceType : uint32_t { UNKNOWN = 0, CPU = 0x01, CUDA = 0x02, METAL = 0x04 };
 
 struct DeviceTypeFlags {
  public:

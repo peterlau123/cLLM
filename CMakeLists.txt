@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
+
 # ===================== Project Options =====================
 option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
 option(NOVA_LLM_BUILD_TESTS "Build tests with GTest" OFF)
@@ -14,6 +15,14 @@ project(
   HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
+# Include Conan CMake integration
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan.cmake)  # Adjust the path if necessary
+
+# Run Conan to install dependencies using conanfile.py
+conan_cmake_run(CONANFILE conanfile.py  # Specify your conanfile.py
+        BASIC_SETUP CMAKE_TARGETS
+        BUILD missing)
+
 # ===================== Conan Dependencies ==================
 find_package(fmt REQUIRED)
 if(NOVA_LLM_ENABLE_LOGGING)
@@ -23,18 +32,10 @@ if(NOVA_LLM_BUILD_TESTS)
   find_package(GTest REQUIRED)
 endif()
 
-# Find TVM package provided by Conan, only if integration is enabled
-if(NOVA_LLM_INTEGRATE_TVM)
-  find_package(tvm CONFIG REQUIRED)
-endif()
-
 # ===================== Build Guards ========================
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds not allowed. Please use a build directory.")
 endif()
-
-# ===================== CMake Options =======================
-include(cmake/options.cmake)
 
 # ===================== Source Files ========================
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
