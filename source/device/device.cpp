@@ -2,7 +2,7 @@
 
 namespace nova_llm {
 
-constexpr bool DeviceTypeFlags::has(DeviceType type) const {
+bool DeviceTypeFlags::has(DeviceType type) const {
   return (flags_ & static_cast<uint32_t>(type)) != 0;
 }
 

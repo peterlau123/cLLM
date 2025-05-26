@@ -114,7 +114,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
-        DESTINATION include/${PROJECT_NAME}
+        DESTINATION include/
         FILES_MATCHING PATTERN "*.h"
 )
 
