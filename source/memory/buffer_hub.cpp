@@ -73,7 +73,13 @@ Block BufferHub::getBlock(const Size& sz) {
     // traverse to upper levels
     auto next_sz = findNextLevel(level_sz);
     if (next_sz.isValid()) {  // find next level
-      // check whether next level has enough space
+      auto& block_list = buffers_[level_sz];
+        for(auto&b:block_list){
+            if(0==b.ref_cnt){
+              b.ref_cnt++;
+              return b;
+            }
+        }
     } else {
       // TODO:allocate new block
     }

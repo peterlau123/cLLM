@@ -54,6 +54,13 @@ class BufferHub {
     IAllocatorSharedPtr allocator;
   };
 
+  struct Level{
+      std::list<Block> block_list;
+      using BlockIterator=std::list<Block>::iterator;
+      std::unordered_map<Size,BlockIterator> free_map;//TODO
+      std::unordered_map<Size,BlockIterator> busy_map;//TODO
+  };
+
   class Builder {
    public:
     static BufferHub* build(const Config& config);
