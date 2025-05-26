@@ -50,7 +50,7 @@ BufferHub::Size BufferHub::findNextLevel(const Size& level_sz) const {
     return m_config_.size_levels[level + 1];
   }
   LOG_WARN("No next level found");
-  return Size();
+  return Size{};
 }
 
 BufferHub::Size BufferHub::findPrevLevel(const Size& lavel_sz) const {}
