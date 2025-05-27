@@ -8,9 +8,16 @@
 
 namespace nova_llm {
 struct Block {
-  uint8_t* data = nullptr;
+  using DataPtr = uint8_t*;
+  DataPtr data = nullptr;
+  DataPtr prev = nullptr;
+  DataPtr next = nullptr;
   uint64_t size = 0;
   int32_t ref_cnt = 0;
+
+  bool isValid() const {
+    return data != nullptr && (prev != nullptr || next != nullptr) && 0 != size;
+  }
 };
 
 class BufferHub {
@@ -54,11 +61,28 @@ class BufferHub {
     IAllocatorSharedPtr allocator;
   };
 
-  struct Level{
-      std::list<Block> block_list;
-      using BlockIterator=std::list<Block>::iterator;
-      std::unordered_map<Size,BlockIterator> free_map;//TODO
-      std::unordered_map<Size,BlockIterator> busy_map;//TODO
+  struct Level {
+   public:
+    Block fetchOneFreeBlock() {
+      if (!free_map.empty()) {
+        auto it = free_map.begin();
+        auto block_it = it->second;
+        block_it->ref_cnt++;
+        busy_map.insert({it->first, it->second});
+        free_map.erase(it);
+        return *(block_it);
+      }
+      return Block {};
+    }
+
+    void putOneBlock(const Block& block) {}
+
+    uint32_t index;
+    Size level_size;
+    std::list<Block> block_list;
+    using BlockIterator = std::list<Block>::iterator;
+    std::unordered_map<Block::DataPtr, BlockIterator> free_map;
+    std::unordered_map<Block::DataPtr, BlockIterator> busy_map;
   };
 
   class Builder {
@@ -68,7 +92,7 @@ class BufferHub {
     static void destroy(BufferHub** hub);
   };
 
-  void setConfig(const Config& config);
+  void initConfig(const Config& config);
 
   Block getBlock(const Size& sz);
 
@@ -89,8 +113,14 @@ class BufferHub {
   [[nodiscard]] Size gradeLevel(const Size& sz) const;
 
   BufferHub() = default;
-  std::unordered_map<Size, std::list<Block>, SizeHash, SizeEqual> buffers_;
-  Config m_config_;
+
+  std::unordered_map<Size, Level, SizeHash, SizeEqual> buffers_;
+  DeviceType device_type_;
+  std::vector<Size> size_levels_;  // ensure that levels are in ascending order
+  Size size_limit_ {0, 0, 0, 4};   // Memory in buffer hub cannot exceed this limit
+  float warning_level_ =
+      0.95;  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
+  IAllocatorSharedPtr allocator_;
 };
 
 }  // namespace nova_llm
