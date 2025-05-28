@@ -3,9 +3,9 @@
 #include <functional>
 #include <unordered_map>
 
-#include "cLLM/common/device.h"
-#include "cLLM/memory/allocator.h"
-#include "cLLM/memory/buffer_define.h"
+#include "NovaLLM/common/device.h"
+#include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/memory/buffer_define.h"
 
 namespace nova_llm {
 /*
@@ -19,7 +19,7 @@ class BufferManager {
     DeviceTypeFlags device_flags;
 
     struct CPU {
-      IAllocatorPtr alloc {nullptr};
+      IAllocatorSharedPtr alloc {nullptr};
     };
 
     CPU cpu;
@@ -34,7 +34,7 @@ class BufferManager {
     static BufferManager& build(const Config& config);
   };
 
-  bool isInited() const { return is_init_; }
+  [[nodiscard("Do not drop isInit return value")]] bool isInited() const { return is_init_; }
 
   Buffer fetch(size_t size, DeviceType device_type);
 

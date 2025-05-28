@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace cllm {
+namespace nova_llm {
 
 EngineImpl::EngineImplPtr EngineImpl::build() {
 
@@ -30,4 +30,4 @@ std::string EngineImpl::chat(const std::string& prompt) {
   return ret;
 }
 
-}  // namespace cllm
+}  // namespace nova_llm

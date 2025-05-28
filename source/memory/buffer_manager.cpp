@@ -6,18 +6,6 @@
 
 namespace nova_llm {
 
-constexpr bool DeviceTypeFlags::has(DeviceType type) const {
-  return (flags & static_cast<uint32_t>(type)) != 0;
-}
-
-// 添加设备
-constexpr void DeviceTypeFlags::set(DeviceType type) { flags |= static_cast<uint32_t>(type); }
-
-// 移除设备
-constexpr void DeviceTypeFlags::clear(DeviceType type) { flags &= ~static_cast<uint32_t>(type); }
-
-// 获取所有设备
-constexpr DeviceType DeviceTypeFlags::get() const { return static_cast<DeviceType>(flags); }
 
 BufferManager &BufferManager::Builder::build(const nova_llm::BufferManager::Config &config) {
   static BufferManager buffer_manager;
