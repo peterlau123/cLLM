@@ -27,19 +27,16 @@ class BufferHub {
     uint16_t kb = 0;
     uint16_t mb = 0;
     uint16_t gb = 0;
-    int level = -1;
 
     [[nodiscard]] uint64_t totalBytes() const {
       return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
     }
 
     bool operator==(const Size& rhs) const {
-      return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb && level == rhs.level;
+      return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb;
     }
 
-    [[nodiscard]] bool isValid() const {
-      return (b != 0 || kb != 0 || mb != 0 || gb != 0) && 0 <= level;
-    }
+    [[nodiscard]] bool isValid() const { return (b != 0 || kb != 0 || mb != 0 || gb != 0); }
   };
 
   struct SizeHash {
@@ -99,7 +96,7 @@ class BufferHub {
   void putBlock(const Block& block);
 
  private:
-  void addSizeLevel(const Size& level_sz);
+  void addSizeLevel(uint32_t index, const Size& level_sz);
 
   // NOTE:cautious,make sure the size level is not in use
   void eraseSizeLevel(const Size& level_sz);

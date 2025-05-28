@@ -9,10 +9,12 @@ namespace nova_llm {
 
 BufferHub* BufferHub::Builder::build(const Config& config) {
   BufferHub* hub = new BufferHub;
-  hub->initConfig(config);
 
+  hub->initConfig(config);
+  int index = 0;
   for (auto v : config.size_levels) {
-    hub->addSizeLevel(v);
+    hub->addSizeLevel(index, v);
+    ++index;
   }
   // TODO:other
   return hub;
@@ -25,14 +27,19 @@ void BufferHub::Builder::destroy(nova_llm::BufferHub** hub) {
 void BufferHub::initConfig(const Config& config) {
   device_type_ = config.device_type;
   size_levels_ = config.size_levels;
+  // sort size levels in ascending order
+  std::sort(size_levels_.begin(), size_levels_.end(), [](const Size& a, const Size& b) {
+    return a.totalBytes() < b.totalBytes();
+  });
   size_limit_ = config.size_limit;
   warning_level_ = config.warning_level;
   allocator_ = config.allocator;
 }
 
-void BufferHub::addSizeLevel(const Size& level_sz) {
+void BufferHub::addSizeLevel(uint32_t index, const Size& level_sz) {
   auto& level = buffers_[level_sz];
   level.level_size = level_sz;
+  level.index = index;
 }
 
 void BufferHub::eraseSizeLevel(const Size& level_sz) {
@@ -41,26 +48,29 @@ void BufferHub::eraseSizeLevel(const Size& level_sz) {
       // TODO:destroy this level
     }
   } else {
-    LOG_WARN("Level %d is not found!", level_sz.level);
+    LOG_WARN("Level with size %d is not found!", level_sz.totalBytes());  // TODO:optimize
   }
 }
 
 BufferHub::Size BufferHub::findNextLevel(const Size& level_sz) const {
-  int level = level_sz.level;
-  if (level <= size_levels_.size() - 1) {
-    return size_levels_[level + 1];
+  if (buffers_.count(level_sz)) {
+    auto level_index = buffers_.at(level_sz).index;
+    if (++level_index < size_levels_.size()) {
+      return size_levels_[++level_index];
+    }
   }
   LOG_WARN("No next level found");
   return Size {};
 }
 
 BufferHub::Size BufferHub::findPrevLevel(const Size& level_sz) const {
-  int level = level_sz.level;
-  if (--level < 0) {
-    LOG_WARN("No prev level found!");
-    return Size {};
+  if (buffers_.count(level_sz)) {
+    auto level_index = buffers_.at(level_sz).index;
+    if (--level_index >= 0) {
+      return size_levels_[--level_index];
+    }
   }
-  return size_levels_[--level];
+  return Size {};
 }
 
 void BufferHub::coalesce() {}
