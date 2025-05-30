@@ -2,14 +2,12 @@
 
 #include <algorithm>
 
-#include "NovaLLM/memory/allocator.h"
 #include "NovaLLM/utils/log.h"
 
 namespace nova_llm {
 
 BufferHub* BufferHub::Builder::build(const Config& config) {
   BufferHub* hub = new BufferHub;
-
   hub->initConfig(config);
   int index = 0;
   for (auto v : config.size_levels) {
@@ -99,14 +97,17 @@ Block BufferHub::getBlock(const Size& sz) {
       }
     }
     if (!ret_block.isValid()) {  // NOTE:向upper level中也都没找到空闲的block
-      uint16_t total_bytes = size_levels_.rbegin()->totalBytes();
+      auto top_level_size = *(size_levels_.rbegin());
+      uint16_t total_bytes = top_level_size.totalBytes();
       void* data = allocator_->allocate(total_bytes);
       Block new_block {};
       new_block.data = reinterpret_cast<uint8_t*>(data);
       new_block.prev = nullptr;
       new_block.next = nullptr;
       new_block.size = total_bytes;
-      // TODO: downsplitting
+
+      const auto& top_level = buffers_[top_level_size];
+      this->downSplitting(top_level.index - 1, block);
     }
   } else {
     LOG_WARN("Unable to find available block of size %d", sz.totalBytes());
@@ -122,5 +123,21 @@ BufferHub::Size BufferHub::gradeLevel(const BufferHub::Size& sz) const {
   // TODO
 }
 
+void BufferHub::downSplitting(uint32_t start_level, const nova_llm::Block& block) {
+  auto block_size = block.size;
+  uint8_t* data_addr = block.data;
+  uint32_t cur_level = start_level;
+
+  while (size_levels_[cur_level].totalBytes() < block_size) {
+    auto sz = size_levels_[cur_level];
+    auto& level = buffers_[sz];
+    Block b {data_addr, nullptr, nullptr, sz.totalBytes(), 0};
+    level.putOneBlock(b);
+
+    data_addr += sz.totalBytes();
+    block_size -= sz.totalBytes();
+    cur_level--;
+  }
+}
 
 }  // namespace nova_llm

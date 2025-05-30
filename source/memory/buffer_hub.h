@@ -72,7 +72,18 @@ class BufferHub {
       return Block {};
     }
 
-    void putOneBlock(const Block& block) {}
+    // TODO
+    void putOneBlock(const Block& block) {
+      Block dst_block(block);
+      if (!block_list.empty()) {
+        auto it = block_list.rbegin();
+        dst_block.prev = it->data;
+      }
+      auto ret_it = block_list.insert(block_list.end(), dst_block);
+      if (0 == free_map.count(dst_block.data)) {
+        free_map.insert({dst_block.data, ret_it});
+      }
+    }
 
     uint32_t index;
     Size level_size;
@@ -109,14 +120,17 @@ class BufferHub {
 
   [[nodiscard]] Size gradeLevel(const Size& sz) const;
 
+  void downSplitting(uint32_t start_level, const Block& block);
+
   BufferHub() = default;
 
   std::unordered_map<Size, Level, SizeHash, SizeEqual> buffers_;
   DeviceType device_type_;
   std::vector<Size> size_levels_;  // ensure that levels are in ascending order
   Size size_limit_ {0, 0, 0, 4};   // Memory in buffer hub cannot exceed this limit
-  float warning_level_ =
-      0.95;  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
+
+  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
+  float warning_level_ = 0.95;
   IAllocatorSharedPtr allocator_;
 };
 
