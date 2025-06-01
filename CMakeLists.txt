@@ -19,14 +19,6 @@ project(
   HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
-# Include Conan CMake integration
-#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan_provider.cmake)  # Adjust the path if necessary
-
-# Run Conan to install dependencies using conanfile.py
-#conan_cmake_run(CONANFILE conanfile.py  # Specify your conanfile.py
-#        BASIC_SETUP CMAKE_TARGETS
-#        BUILD missing)
-
 # ===================== Conan Dependencies ==================
 find_package(fmt REQUIRED)
 if(NOVA_LLM_ENABLE_LOGGING)

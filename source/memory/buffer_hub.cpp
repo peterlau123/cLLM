@@ -6,8 +6,54 @@
 
 namespace nova_llm {
 
+BlockPtr BufferHub::Level::fetchOneFreeBlock() {
+  if (!free_map.empty()) {
+    auto it = free_map.begin();
+    auto block_it = it->second;
+    (*block_it)->ref_cnt++;
+    busy_map.insert({it->first, it->second});
+    free_map.erase(it);
+    return *block_it;
+  }
+  return nullptr;
+}
+
+void BufferHub::Level::putOneBlock(const BlockPtr& block_ptr) {
+  BlockPtr dst_block(block_ptr);
+  if (block_list.empty()) {
+    auto ret_it = block_list.insert(block_list.end(), dst_block);
+    (*ret_it)->ref_cnt = 0;
+    free_map.insert({dst_block->data, ret_it});
+  } else {
+    bool in_free_m = free_map.count(dst_block->data);
+    bool in_busy_m = busy_map.count(dst_block->data);
+    if (!in_free_m && !in_busy_m) {
+      auto cur_last_it = block_list.rbegin();
+      auto it = block_list.insert(block_list.end(), dst_block);
+      (*it)->prev = *cur_last_it;
+      (*it)->next = nullptr;
+      (*it)->ref_cnt = 0;
+      free_map.insert({(*it)->data, it});
+    } else if (in_free_m) {
+      LOG_WARN("Block %p already in block list at level %d",
+               static_cast<void*>(dst_block->data),
+               index);
+    } else {  // in_busy_m is true
+      auto& it = busy_map[dst_block->data];
+      if (0 == --(*it)->ref_cnt) {
+        busy_map.erase((*it)->data);
+        (*it)->ref_cnt = 0;
+        // TODO:find if can coalesce from prev and next block
+        free_map[dst_block->data] = it;
+      } else {
+        (*it)->ref_cnt--;
+      }
+    }
+  }
+}
+
 BufferHub* BufferHub::Builder::build(const Config& config) {
-  BufferHub* hub = new BufferHub;
+  auto* hub = new BufferHub;
   hub->initConfig(config);
   int index = 0;
   for (auto v : config.size_levels) {
@@ -50,7 +96,7 @@ void BufferHub::eraseSizeLevel(const Size& level_sz) {
   }
 }
 
-BufferHub::Size BufferHub::findNextLevel(const Size& level_sz) const {
+Size BufferHub::findNextLevel(const Size& level_sz) const {
   if (buffers_.count(level_sz)) {
     auto level_index = buffers_.at(level_sz).index;
     if (++level_index < size_levels_.size()) {
@@ -61,7 +107,7 @@ BufferHub::Size BufferHub::findNextLevel(const Size& level_sz) const {
   return Size {};
 }
 
-BufferHub::Size BufferHub::findPrevLevel(const Size& level_sz) const {
+Size BufferHub::findPrevLevel(const Size& level_sz) const {
   if (buffers_.count(level_sz)) {
     auto level_index = buffers_.at(level_sz).index;
     if (--level_index >= 0) {
@@ -71,17 +117,29 @@ BufferHub::Size BufferHub::findPrevLevel(const Size& level_sz) const {
   return Size {};
 }
 
-void BufferHub::coalesce() {}
+BlockPtr BufferHub::coalesce(const BlockPtr& block_ptr) {
+  if (nullptr == block_ptr->data) {
+    return nullptr;
+  }
+  if (nullptr == block_ptr->prev && nullptr == block_ptr->next) {
+    return block_ptr;
+  }
+  auto* prev = block_ptr->prev;
+  auto* data = block_ptr->data;
+  auto* next = block_ptr->next;
+  // TODO:coalesce if possible
+  return nullptr;
+}
 
-Block BufferHub::getBlock(const Size& sz) {
+BlockPtr BufferHub::getBlock(const Size& sz) {
   // round it to ceil level
   auto level_sz = gradeLevel(sz);
   // search the block list
-  Block ret_block;
+  BlockPtr ret_block;
   if (buffers_.count(level_sz)) {
     auto& level = buffers_[level_sz];
-    Block block = level.fetchOneFreeBlock();
-    if (block.isValid()) {
+    BlockPtr block = level.fetchOneFreeBlock();
+    if (block->isValid()) {
       return block;
     }
     // traverse to upper levels
@@ -89,14 +147,14 @@ Block BufferHub::getBlock(const Size& sz) {
     while (next_sz.isValid()) {
       level = buffers_[level_sz];
       block = level.fetchOneFreeBlock();
-      if (block.isValid()) {
+      if (block->isValid()) {
         ret_block = block;
         break;
       } else {
         next_sz = findNextLevel(next_sz);
       }
     }
-    if (!ret_block.isValid()) {  // NOTE:向upper level中也都没找到空闲的block
+    if (!ret_block->isValid()) {  // NOTE:向upper level中也都没找到空闲的block
       auto top_level_size = *(size_levels_.rbegin());
       uint16_t total_bytes = top_level_size.totalBytes();
       void* data = allocator_->allocate(total_bytes);
@@ -115,23 +173,29 @@ Block BufferHub::getBlock(const Size& sz) {
   return ret_block;
 }
 
-void BufferHub::putBlock(const Block& block) {
+void BufferHub::putBlock(const BlockPtr& block_ptr) {
   // TODO
 }
 
-BufferHub::Size BufferHub::gradeLevel(const BufferHub::Size& sz) const {
+Size BufferHub::gradeLevel(const Size& sz) const {
   // TODO
 }
 
-void BufferHub::downSplitting(uint32_t start_level, const nova_llm::Block& block) {
-  auto block_size = block.size;
-  uint8_t* data_addr = block.data;
+void BufferHub::downSplitting(uint32_t start_level, const nova_llm::BlockPtr& block_ptr) {
+  auto block_size = block_ptr->size;
+  uint8_t* data_addr = block_ptr->data;
   uint32_t cur_level = start_level;
 
   while (size_levels_[cur_level].totalBytes() < block_size) {
     auto sz = size_levels_[cur_level];
     auto& level = buffers_[sz];
-    Block b {data_addr, nullptr, nullptr, sz.totalBytes(), 0};
+
+    auto b = static_cast<BlockPtr>(allocator_->allocate(sizeof(Block)));
+    b->data = data_addr;
+    b->prev = nullptr;
+    b->next = nullptr;
+    b->size = sz.totalBytes();
+    b->ref_cnt = 0;
     level.putOneBlock(b);
 
     data_addr += sz.totalBytes();
