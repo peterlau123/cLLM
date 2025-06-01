@@ -29,6 +29,11 @@ void BufferManager::put(const Buffer &buffer) {}
 
 Buffer BufferManager::fetch(size_t size, DeviceType device_type) {
   Buffer buffer;
+  Size sz(size);
+  auto block_ptr=buffer_hubs_[device_type]->getBlock(sz);
+  buffer.data=block_ptr->data;
+  buffer.size=block_ptr->size;
+
   return buffer;
 }
 

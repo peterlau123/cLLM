@@ -9,11 +9,59 @@
 namespace nova_llm {
 
 struct Size {
+ private:
   uint16_t b = 0;
   uint16_t kb = 0;
   uint16_t mb = 0;
   uint16_t gb = 0;
+  uint64_t total_bytes=0;
+ public:
+  explicit Size(std::size_t sz){
+    total_bytes=static_cast<uint64_t>(sz);
+  }
+  explicit Size(uint64_t sz){
+    total_bytes=sz;
+  }
+  [[nodiscard]] uint64_t totalBytes() const {
+    return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
+  }
 
+  bool operator==(const Size& rhs) const {
+    return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb;
+  }
+
+  [[nodiscard]] bool isValid() const { return (b != 0 || kb != 0 || mb != 0 || gb != 0); }
+};
+
+struct SizeHash {
+  std::size_t operator()(const Size& s) const { return std::hash<uint64_t>()(s.totalBytes()); }
+};
+
+struct SizeEqual {
+  bool operator()(const Size& lhs, const Size& rhs) const {
+    return lhs.totalBytes() == rhs.totalBytes();
+  }
+};
+
+struct Block {
+  using DataPtr = uint8_t*;
+  using BlockPtr = Block*;
+  DataPtr data = nullptr;
+  BlockPtr prev = nullptr;
+  BlockPtr next = nullptr;
+  uint64_t size = 0;
+  int32_t ref_cnt = 0;
+
+  bool isValid() const {
+    return data != nullptr && (prev != nullptr || next != nullptr) && 0 != size;
+  }
+};
+
+using BlockPtr = Block::BlockPtr;
+
+class BufferHub {
+ public:
+  struct Config {
   [[nodiscard]] uint64_t totalBytes() const {
     return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
   }
