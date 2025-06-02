@@ -43,7 +43,6 @@ void BufferHub::Level::putOneBlock(const BlockPtr& block_ptr) {
       if (0 == --(*it)->ref_cnt) {
         busy_map.erase((*it)->data);
         (*it)->ref_cnt = 0;
-        // TODO:find if can coalesce from prev and next block
         free_map[dst_block->data] = it;
       } else {
         (*it)->ref_cnt--;
@@ -124,11 +123,26 @@ BlockPtr BufferHub::coalesce(const BlockPtr& block_ptr) {
   if (nullptr == block_ptr->prev && nullptr == block_ptr->next) {
     return block_ptr;
   }
+
   auto* prev = block_ptr->prev;
   auto* data = block_ptr->data;
   auto* next = block_ptr->next;
-  // TODO:coalesce if possible
-  return nullptr;
+  auto ret=static_cast<BlockPtr>(allocator_->allocate(sizeof(Block)));
+  while(prev&&prev->prev){
+    if(prev->prev->data+prev->prev->size==prev->data){
+      prev=prev->prev;
+    }
+  }
+
+  while(next&&next->next){
+    if(next->data+next->size==next->next->data){
+      next=next->next;
+    }
+  }
+
+  auto distance=next->data-prev->data;
+
+  return ret;
 }
 
 BlockPtr BufferHub::getBlock(const Size& sz) {

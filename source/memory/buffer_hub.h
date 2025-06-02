@@ -10,67 +10,80 @@ namespace nova_llm {
 
 struct Size {
  private:
-  uint16_t b = 0;
-  uint16_t kb = 0;
-  uint16_t mb = 0;
-  uint16_t gb = 0;
-  uint64_t total_bytes=0;
+  uint64_t b_ = 0;
+  uint64_t kb_ = 0;
+  uint64_t mb_ = 0;
+  uint64_t gb_ = 0;
+  uint64_t total_bytes_ = 0;
+  const uint64_t ratio_ = 1024;
+
+  void convert_in_units(uint64_t bytes) {
+    auto down_ratio = std::pow(ratio_, 3);
+
+    gb_ = bytes / down_ratio;
+    bytes -= gb_ * down_ratio;
+    down_ratio /= ratio_;
+
+    mb_ = bytes / down_ratio;
+    bytes -= mb_ * down_ratio;
+    down_ratio /= ratio_;
+
+    kb_ = bytes / down_ratio;
+    bytes -= kb_ * down_ratio;
+
+    b_ = bytes;
+  }
+
  public:
-  explicit Size(std::size_t sz){
-    total_bytes=static_cast<uint64_t>(sz);
-  }
-  explicit Size(uint64_t sz){
-    total_bytes=sz;
-  }
-  [[nodiscard]] uint64_t totalBytes() const {
-    return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
+  Size() = default;
+
+  explicit Size(uint64_t sz) {
+    total_bytes_ = sz;
+    convert_in_units(total_bytes_);
   }
 
-  bool operator==(const Size& rhs) const {
-    return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb;
+  Size(uint64_t b, uint64_t kb, uint64_t mb, uint64_t gb) {
+    b_ = b;
+    kb_ = kb;
+    mb_ = mb;
+    gb_ = gb;
+
+    if (ratio_ < b_) {
+      auto kb_cnt = b_ / ratio_;
+      b_ -= kb_cnt * ratio_;
+      kb_ += kb_cnt;
+    }
+
+    if (ratio_ < kb_) {
+      auto mb_cnt = kb_ / ratio_;
+      kb_ -= mb_cnt * ratio_;
+      mb_ += mb_cnt;
+    }
+
+    if (ratio_ < mb_) {
+      auto gb_cnt = mb_ / ratio_;
+      mb_ -= gb_cnt * ratio_;
+      gb_ += gb_cnt;
+    }
+
+    total_bytes_ = b_ + kb_ * ratio_ + mb_ * ratio_ * ratio_ + gb_ * ratio_ * ratio_ * ratio_;
   }
 
-  [[nodiscard]] bool isValid() const { return (b != 0 || kb != 0 || mb != 0 || gb != 0); }
-};
-
-struct SizeHash {
-  std::size_t operator()(const Size& s) const { return std::hash<uint64_t>()(s.totalBytes()); }
-};
-
-struct SizeEqual {
-  bool operator()(const Size& lhs, const Size& rhs) const {
-    return lhs.totalBytes() == rhs.totalBytes();
-  }
-};
-
-struct Block {
-  using DataPtr = uint8_t*;
-  using BlockPtr = Block*;
-  DataPtr data = nullptr;
-  BlockPtr prev = nullptr;
-  BlockPtr next = nullptr;
-  uint64_t size = 0;
-  int32_t ref_cnt = 0;
-
-  bool isValid() const {
-    return data != nullptr && (prev != nullptr || next != nullptr) && 0 != size;
-  }
-};
-
-using BlockPtr = Block::BlockPtr;
-
-class BufferHub {
- public:
-  struct Config {
-  [[nodiscard]] uint64_t totalBytes() const {
-    return (gb << 10) * 1024 * 1024 + (mb << 10) * 1024 + (kb << 10) + b;
+  Size(const Size& rhs) {
+    total_bytes_ = rhs.totalBytes();
+    convert_in_units(total_bytes_);
   }
 
-  bool operator==(const Size& rhs) const {
-    return b == rhs.b && kb == rhs.kb && mb == rhs.mb && gb == rhs.gb;
+  Size& operator=(const Size& rhs) {
+    total_bytes_ = rhs.totalBytes();
+    convert_in_units(total_bytes_);
   }
 
-  [[nodiscard]] bool isValid() const { return (b != 0 || kb != 0 || mb != 0 || gb != 0); }
+  [[nodiscard]] uint64_t totalBytes() const { return total_bytes_; }
+
+  bool operator==(const Size& rhs) const { return totalBytes() == rhs.totalBytes(); }
+
+  [[nodiscard]] bool isValid() const { return totalBytes() != 0; }
 };
 
 struct SizeHash {
@@ -114,8 +127,9 @@ class BufferHub {
    public:
     BlockPtr fetchOneFreeBlock();
     void putOneBlock(const BlockPtr& block_ptr);
-    uint32_t index;
-    Size level_size;
+    uint32_t index = -1;
+    Size level_size {static_cast<uint64_t>(0)};
+
     using BlockPtr = Block*;
     std::list<BlockPtr> block_list;
     using BlockIterator = std::list<BlockPtr>::iterator;
