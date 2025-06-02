@@ -21,19 +21,29 @@ bool BufferManager::init(const nova_llm::BufferManager::Config &config) {
     BufferHub::Config cfg;
     cfg.allocator = config.cpu.alloc;
     buffer_hubs_[DeviceType::CPU] = BufferHub::Builder::build(cfg);
+    ret |= true;
   }
+  // TODO: other devices
   return ret;
 }
 
-void BufferManager::put(const Buffer &buffer) {}
+void BufferManager::put(const Buffer &buffer) {
+  if (nullptr == buffer.data || 0 == buffer.size) {
+    return;
+  }
+  auto device_type = buffer.device_type;
+  auto &device_mem_hub = buffer_hubs_[device_type];
+  device_mem_hub->putBlockFromBuffer(buffer);
+}
 
 Buffer BufferManager::fetch(size_t size, DeviceType device_type) {
   Buffer buffer;
   Size sz(size);
   auto block_ptr = buffer_hubs_[device_type]->getBlock(sz);
-  buffer.data = block_ptr->data;
-  buffer.size = block_ptr->size;
-
+  if (nullptr != block_ptr) {
+    buffer.data = block_ptr->data;
+    buffer.size = block_ptr->size;
+  }
   return buffer;
 }
 

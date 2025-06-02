@@ -4,6 +4,7 @@
 
 #include "NovaLLM/common/device.h"
 #include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/memory/buffer_define.h"
 #include "NovaLLM/utils/template.h"
 
 namespace nova_llm {
@@ -100,24 +101,33 @@ struct Block {
   using DataPtr = uint8_t*;
   using BlockPtr = Block*;
   DataPtr data = nullptr;
-  BlockPtr prev = nullptr;
-  BlockPtr next = nullptr;
   uint64_t size = 0;
   int32_t ref_cnt = 0;
 
   bool isValid() const {
-    return data != nullptr && (prev != nullptr || next != nullptr) && 0 != size;
+    // return data != nullptr && (prev != nullptr || next != nullptr) && 0 != size;
+    return data != nullptr && 0 != size;
   }
 };
 
 using BlockPtr = Block::BlockPtr;
 
+/*
+ * @Brief: Memory block hub
+ * Initially we use segregated free list to manage memory block. It has the following features:
+ * 1) each level is independent
+ * 2) coalesce and split is not allowed between levels
+ * 3) for levels below 1kb, we allocate 1kb for each level when no free block at this level
+ *    for levels below 1mb, we allocate 1mb for each level
+ *    for levels below 1gb, we allocate 1gb for each level
+ *    for levels above 1gb, we allocate 4gb for the current level
+ * */
 class BufferHub {
  public:
   struct Config {
     DeviceType device_type;
     std::vector<Size> size_levels;  // ensure that levels are in ascending order
-    Size size_limit {0, 0, 0, 4};   // Memory in buffer hub cannot exceed this limit
+    Size size_limit {0, 0, 0, 8};   // Memory in buffer hub cannot exceed this limit
     float warning_level =
         0.95;  // Be cautious when memory in buffer hub exceeds size_limit*warning_level
     IAllocatorSharedPtr allocator;
@@ -126,15 +136,22 @@ class BufferHub {
   struct Level {
    public:
     BlockPtr fetchOneFreeBlock();
+
     void putOneBlock(const BlockPtr& block_ptr);
+
+    void refill(const Size& sz);
+
+    ~Level();
+
     uint32_t index = -1;
-    Size level_size {static_cast<uint64_t>(0)};
+    Size level_size {static_cast<uint64_t>(0)};  // each block size at this level
 
     using BlockPtr = Block*;
     std::list<BlockPtr> block_list;
     using BlockIterator = std::list<BlockPtr>::iterator;
     std::unordered_map<Block::DataPtr, BlockIterator> free_map;
     std::unordered_map<Block::DataPtr, BlockIterator> busy_map;
+    BufferHub* hub;
   };
 
   class Builder {
@@ -150,21 +167,24 @@ class BufferHub {
 
   void putBlock(const BlockPtr& block);
 
+  void putBlockFromBuffer(const Buffer& buffer);
+
  private:
+  Block::DataPtr allocData(uint64_t sz);
+  void deallocData(Block::DataPtr& data_ptr);
+
+  BlockPtr allocBlock();
+  void deallocateBlock(BlockPtr& block_ptr);
+
+  BlockPtr setUpBlock(const Size& sz);  // alloc and init block
+
+  void tearDownBlock(BlockPtr& block);
+
   void addSizeLevel(uint32_t index, const Size& level_sz);
 
-  // NOTE:cautious,make sure the size level is not in use
   void eraseSizeLevel(const Size& level_sz);
 
-  Size findNextLevel(const Size& level_sz) const;
-
-  Size findPrevLevel(const Size& level_sz) const;
-
-  BlockPtr coalesce(const BlockPtr& block_ptr);
-
   [[nodiscard]] Size gradeLevel(const Size& sz) const;
-
-  void downSplitting(uint32_t start_level, const BlockPtr& block_ptr);
 
   BufferHub() = default;
 
