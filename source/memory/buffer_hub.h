@@ -112,6 +112,17 @@ struct Block {
 
 using BlockPtr = Block::BlockPtr;
 
+class DefaultSizeLevelStrategy {
+ public:
+  virtual vector<Size> byteSizes() const;
+
+  virtual vector<Size> kiloByteSizes() const;
+
+  virtual vector<Size> megaByteSizes() const;
+
+  virtual vector<Size> gigaByteSizes() const;
+};
+
 /*
  * @Brief: Memory block hub
  * Initially we use segregated free list to manage memory block. It has the following features:

@@ -7,23 +7,52 @@
 namespace nova_llm {
 
 
+static BufferManager buffer_manager;
+
 BufferManager &BufferManager::Builder::build(const nova_llm::BufferManager::Config &config) {
-  static BufferManager buffer_manager;
   if (!buffer_manager.isInited()) {
     auto ret = buffer_manager.init(config);
+    if (!ret) {
+      LOG_ERROR("Failed to init buffer manager");
+    }
   }
   return buffer_manager;
 }
 
+BufferManager &BufferManager::Builder::getInstance() { return buffer_manager; }
+
 bool BufferManager::init(const nova_llm::BufferManager::Config &config) {
+  if (is_init_) {
+    return true;
+  }
   bool ret = false;
   if (config.device_flags.has(DeviceType::CPU)) {
     BufferHub::Config cfg;
     cfg.allocator = config.cpu.alloc;
+    cfg.size_levels.insert(cfg.size_levels.end(),
+                           DefaultSizeLevelStrategy::byteSizes().begin(),
+                           DefaultSizeLevelStrategy::byteSizes().end());
+    // for size below 1kb
+    cfg.size_levels.insert(cfg.size_levels.end(),
+                           DefaultSizeLevelStrategy::kiloByteSizes().begin(),
+                           DefaultSizeLevelStrategy::kiloByteSizes().end());
+    // for size below 1mb
+    cfg.size_levels.insert(cfg.size_levels.end(),
+                           DefaultSizeLevelStrategy::megaByteSizes().begin(),
+                           DefaultSizeLevelStrategy::megaByteSizes().end());
+    // for size below 1gb
+    cfg.size_levels.insert(cfg.size_levels.end(),
+                           DefaultSizeLevelStrategy::gigaByteSizes().begin(),
+                           DefaultSizeLevelStrategy::gigaByteSizes().end());
+
+    cfg.size_limit = config.size_limit;
+    cfg.warning_level = config.warning_level;
+
     buffer_hubs_[DeviceType::CPU] = BufferHub::Builder::build(cfg);
     ret |= true;
   }
   // TODO: other devices
+  is_init_ = true;
   return ret;
 }
 
@@ -51,6 +80,7 @@ BufferManager::~BufferManager() {
   for (auto p : buffer_hubs_) {
     BufferHub::Builder::destroy(&(p.second));
   }
+  is_init_ = false;
 }
 
 

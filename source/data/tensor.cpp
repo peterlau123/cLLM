@@ -40,12 +40,18 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   ASSERT(dtype >= DataType::INT8 && dtype < DataType::TOTAL, "Invalid data type");
   // Check if the device type is valid
   ASSERT(device >= DeviceType::CPU && device <= DeviceType::METAL, "Invalid device type");
-  // Calculate the total size of the tensor
+  // Calculate the total elements of the tensor
   size_ = 1;
   for (const auto& dim : dims_) {
     size_ *= dim;
   }
-  // TODO:get data
+  Buffer buffer = BufferManager::Builder::getInstance().fetch(size_ * sizeof(m_dtype_), m_device_);
+  this->data_ = buffer.data;
+  this->data_size_ = buffer.size;
+  m_deleter_ = [&data_size_](void** data) {
+    BufferManager::Builder::getInstance().put(Buffer(*data, data_size_, m_device_));
+    *data = nullptr;
+  };
 }
 
 Tensor::Tensor(const void* data,
@@ -73,6 +79,10 @@ Tensor& Tensor::operator+(const Tensor& rhs) {
   return ret;
 }
 
-Tensor::~Tensor() {}
+Tensor::~Tensor() {
+  if (0 == --ref_count_) {
+    m_deleter_(&data_);
+  }
+}
 
 }  // namespace nova_llm

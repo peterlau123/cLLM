@@ -6,6 +6,50 @@
 
 namespace nova_llm {
 
+virtual vector<Size> DefaultSizeLevelStrategy::byteSizes() {
+  vector<Size> ret;
+  uint32_t base = 64;
+  uint32_t ratio = 2;
+  for (uint64_t i = base; i < 1024;) {
+    ret.push_back(Size(i, 0, 0, 0));
+    i *= ratio;
+  }
+  return ret;
+}
+
+virtual vector<Size> DefaultSizeLevelStrategy::kiloByteSizes() {
+  vector<Size> ret;
+  uint32_t base = 4;
+  uint32_t ratio = 2;
+  for (uint64_t i = base; i < 1024;) {
+    ret.push_back(Size(0, i, 0, 0));
+    i *= ratio;
+  }
+  return ret;
+}
+
+virtual vector<Size> DefaultSizeLevelStrategy::megaByteSizes() {
+  vector<Size> ret;
+  uint32_t base = 2;
+  uint32_t ratio = 2;
+  for (uint64_t i = base; i < 1024;) {
+    ret.push_back(Size(0, 0, i, 0));
+    i *= ratio;
+  }
+  return ret;
+}
+
+virtual vector<Size> DefaultSizeLevelStrategy::gigaByteSizes() {
+  vector<Size> ret;
+  uint32_t base = 1;
+  uint32_t ratio = 2;
+  for (uint64_t i = base; i < 10;) {
+    ret.push_back(Size(0, 0, 0, i));
+    i *= ratio;
+  }
+  return ret;
+}
+
 BlockPtr BufferHub::Level::fetchOneFreeBlock() {
   BlockPtr ret_block {nullptr};
   if (!free_map.empty()) {

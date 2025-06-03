@@ -26,12 +26,17 @@ class BufferManager {
 
     struct GPU {};
 
+    GPU gpu;
+
     struct METAL {};
+
+    METAL metal;
   };
 
   class Builder {
    public:
     static BufferManager& build(const Config& config);
+    static BufferManager& getInstance();
   };
 
   [[nodiscard("Do not drop isInit return value")]] bool isInited() const { return is_init_; }
