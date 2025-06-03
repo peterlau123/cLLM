@@ -114,13 +114,13 @@ using BlockPtr = Block::BlockPtr;
 
 class DefaultSizeLevelStrategy {
  public:
-  virtual vector<Size> byteSizes() const;
+  static vector<Size> byteSizes() const;
 
-  virtual vector<Size> kiloByteSizes() const;
+  static vector<Size> kiloByteSizes() const;
 
-  virtual vector<Size> megaByteSizes() const;
+  static vector<Size> megaByteSizes() const;
 
-  virtual vector<Size> gigaByteSizes() const;
+  static vector<Size> gigaByteSizes() const;
 };
 
 /*

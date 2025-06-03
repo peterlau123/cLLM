@@ -1,5 +1,6 @@
 #include "NovaLLM/data/tensor.h"
 
+#include "NovaLLM/memory/buffer_manager.h"
 #include "NovaLLM/utils/macros.h"
 
 namespace nova_llm {
@@ -27,10 +28,11 @@ uint64_t getByteSize(DataType dtype) {
   }
 }
 
-Tensor::Tensor() : dims_(), size_(0), m_dtype_(DataType::UNKNOWN), m_device_(DeviceType::UNKNOWN) {}
+Tensor::Tensor()
+    : dims_(), ele_cnt_(0), m_dtype_(DataType::UNKNOWN), m_device_(DeviceType::UNKNOWN) {}
 
 Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType device)
-    : dims_(dims), size_(0), m_dtype_(dtype), m_device_(device) {
+    : dims_(dims), ele_cnt_(0), m_dtype_(dtype), m_device_(device) {
   // Check if the dimensions are valid
   ASSERT(!dims.empty(), "Tensor dimensions cannot be empty");
   for (const auto& dim : dims) {
@@ -41,14 +43,15 @@ Tensor::Tensor(const std::vector<uint32_t>& dims, DataType dtype, DeviceType dev
   // Check if the device type is valid
   ASSERT(device >= DeviceType::CPU && device <= DeviceType::METAL, "Invalid device type");
   // Calculate the total elements of the tensor
-  size_ = 1;
+  ele_cnt_ = 1;
   for (const auto& dim : dims_) {
-    size_ *= dim;
+    ele_cnt_ *= dim;
   }
-  Buffer buffer = BufferManager::Builder::getInstance().fetch(size_ * sizeof(m_dtype_), m_device_);
+  Buffer buffer =
+      BufferManager::Builder::getInstance().fetch(ele_cnt_ * sizeof(m_dtype_), m_device_);
   this->data_ = buffer.data;
   this->data_size_ = buffer.size;
-  m_deleter_ = [&data_size_](void** data) {
+  m_deleter_ = [&](void** data) {
     BufferManager::Builder::getInstance().put(Buffer(*data, data_size_, m_device_));
     *data = nullptr;
   };

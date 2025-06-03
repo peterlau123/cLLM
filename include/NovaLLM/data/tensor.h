@@ -128,9 +128,9 @@ class Tensor {
 
  private:
   std::vector<uint32_t> dims_;  ///< 张量的维度数组
-  int size_ {0};                ///< 元素总数
+  int ele_cnt_ {0};             ///< 元素总数
   void* data_ {nullptr};        ///< 数据缓冲区
-  uint64_t data_size_;          ///< 数据缓冲区大小，单位为字节，大于等于size_*sizeof(m_dtype_)
+  uint64_t data_size_;  ///< 数据缓冲区大小，单位为字节，大于等于size_*sizeof(m_dtype_)
   DataSourceType m_data_source_;
   DataType m_dtype_;                      ///< 数据类型
   DeviceType m_device_;                   ///< 设备类型

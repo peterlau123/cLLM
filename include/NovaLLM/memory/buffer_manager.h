@@ -14,6 +14,7 @@ namespace nova_llm {
 class BufferHub;
 
 class BufferManager {
+
  public:
   struct Config {
     DeviceTypeFlags device_flags;
@@ -37,6 +38,9 @@ class BufferManager {
    public:
     static BufferManager& build(const Config& config);
     static BufferManager& getInstance();
+
+   private:
+    static BufferManager buffer_manager;
   };
 
   [[nodiscard("Do not drop isInit return value")]] bool isInited() const { return is_init_; }
@@ -49,10 +53,14 @@ class BufferManager {
 
  private:
   BufferManager() = default;
-  BufferManager(const BufferManager&) = delete;             // Disable copy constructor
+
+  BufferManager(const BufferManager&) = delete;  // Disable copy constructor
+
   BufferManager& operator=(const BufferManager&) = delete;  // Disable copy assignment
-  BufferManager(BufferManager&&) = delete;                  // Disable move constructor
-  BufferManager& operator=(BufferManager&&) = delete;       // Disable move assignment
+
+  BufferManager(BufferManager&&) = delete;  // Disable move constructor
+
+  BufferManager& operator=(BufferManager&&) = delete;  // Disable move assignment
 
   bool init(const Config& config);
   bool is_init_;

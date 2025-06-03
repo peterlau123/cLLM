@@ -1,13 +1,14 @@
 #include "NovaLLM/memory/buffer_manager.h"
 
 #include "NovaLLM/memory/allocator.h"
+#include "NovaLLM/utils/log.h"
 #include "NovaLLM/utils/macros.h"
 #include "buffer_hub.h"
 
 namespace nova_llm {
 
 
-static BufferManager buffer_manager;
+BufferManager BufferManager::Builder::buffer_manager;
 
 BufferManager &BufferManager::Builder::build(const nova_llm::BufferManager::Config &config) {
   if (!buffer_manager.isInited()) {
@@ -29,24 +30,21 @@ bool BufferManager::init(const nova_llm::BufferManager::Config &config) {
   if (config.device_flags.has(DeviceType::CPU)) {
     BufferHub::Config cfg;
     cfg.allocator = config.cpu.alloc;
-    cfg.size_levels.insert(cfg.size_levels.end(),
-                           DefaultSizeLevelStrategy::byteSizes().begin(),
-                           DefaultSizeLevelStrategy::byteSizes().end());
-    // for size below 1kb
-    cfg.size_levels.insert(cfg.size_levels.end(),
-                           DefaultSizeLevelStrategy::kiloByteSizes().begin(),
-                           DefaultSizeLevelStrategy::kiloByteSizes().end());
-    // for size below 1mb
-    cfg.size_levels.insert(cfg.size_levels.end(),
-                           DefaultSizeLevelStrategy::megaByteSizes().begin(),
-                           DefaultSizeLevelStrategy::megaByteSizes().end());
-    // for size below 1gb
-    cfg.size_levels.insert(cfg.size_levels.end(),
-                           DefaultSizeLevelStrategy::gigaByteSizes().begin(),
-                           DefaultSizeLevelStrategy::gigaByteSizes().end());
 
-    cfg.size_limit = config.size_limit;
-    cfg.warning_level = config.warning_level;
+    auto byte_sizes = DefaultSizeLevelStrategy::byteSizes();
+    cfg.size_levels.insert(cfg.size_levels.end(), byte_sizes.begin(), byte_sizes.end());
+    // for size below 1kb
+    auto kilobyte_sizes = DefaultSizeLevelStrategy::kiloByteSizes();
+    cfg.size_levels.insert(cfg.size_levels.end(), kilobyte_sizes.begin(), kilobyte_sizes.end());
+    // for size below 1mb
+    auto mb_sizes = DefaultSizeLevelStrategy::megaByteSizes();
+    cfg.size_levels.insert(cfg.size_levels.end(), mb_sizes.begin(), mb_sizes.end());
+    // for size below 1gb
+    auto gb_sizes = DefaultSizeLevelStrategy::gigaByteSizes();
+    cfg.size_levels.insert(cfg.size_levels.end(), gb_sizes.begin(), gb_sizes.end());
+
+    cfg.size_limit = Size(0, 0, 0, 4);
+    cfg.warning_level = 0.95;
 
     buffer_hubs_[DeviceType::CPU] = BufferHub::Builder::build(cfg);
     ret |= true;
