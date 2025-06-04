@@ -134,7 +134,7 @@ Tensor& Tensor::operator=(const Tensor& other) {
     m_data_source_ = other.dataFrom();
     m_dtype_ = other.dtype();
     m_device_ = other.device();
-    ref_cnt_ = other.ref_cnt_;
+    ref_cnt_ = other.ref_cnt_;//TODO:notice here
     m_deleter_ = other.deleter();
   }
   return *this;

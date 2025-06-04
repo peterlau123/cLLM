@@ -151,7 +151,7 @@ class Tensor {
   DataSourceType m_data_source_ {DataSourceType::AUTO};
   DataType m_dtype_ {DataType::UNKNOWN};       ///< 数据类型
   DeviceType m_device_ {DeviceType::UNKNOWN};  ///< 设备类型
-  std::atomic<uint32_t>* ref_cnt_ {nullptr};   ///< 引用计数
+  std::atomic<uint32_t>* ref_cnt_ {nullptr};   ///< 引用计数,TODO:important!
   Deleter m_deleter_ = DefaultDeletor();       ///< 自定义删除器
 };
 
