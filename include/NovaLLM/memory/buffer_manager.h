@@ -25,11 +25,15 @@ class BufferManager {
 
     CPU cpu;
 
-    struct GPU {};
+    struct GPU {
+      IAllocatorSharedPtr alloc {nullptr};
+    };
 
     GPU gpu;
 
-    struct METAL {};
+    struct METAL {
+      IAllocatorSharedPtr alloc {nullptr};
+    };
 
     METAL metal;
   };
@@ -43,6 +47,14 @@ class BufferManager {
     static BufferManager buffer_manager;
   };
 
+  BufferManager(const BufferManager&) = delete;  // Disable copy constructor
+
+  BufferManager& operator=(const BufferManager&) = delete;  // Disable copy assignment
+
+  BufferManager(BufferManager&&) = delete;  // Disable move constructor
+
+  BufferManager& operator=(BufferManager&&) = delete;  // Disable move assignment
+
   [[nodiscard("Do not drop isInit return value")]] bool isInited() const { return is_init_; }
 
   Buffer fetch(size_t size, DeviceType device_type);
@@ -54,16 +66,10 @@ class BufferManager {
  private:
   BufferManager() = default;
 
-  BufferManager(const BufferManager&) = delete;  // Disable copy constructor
-
-  BufferManager& operator=(const BufferManager&) = delete;  // Disable copy assignment
-
-  BufferManager(BufferManager&&) = delete;  // Disable move constructor
-
-  BufferManager& operator=(BufferManager&&) = delete;  // Disable move assignment
-
   bool init(const Config& config);
-  bool is_init_;
+
+  bool is_init_ {false};
+
   std::unordered_map<DeviceType, BufferHub*> buffer_hubs_;
 };
 
