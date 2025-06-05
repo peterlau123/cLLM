@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "NovaLLM/parser/parser.h"
-#include "NovaLLM/pipeline.h"
+#include "NovaLLM/pipeline/pipeline.h"
 
 namespace nova_llm {
 
@@ -24,8 +24,8 @@ class EngineImpl {
  private:
   bool init_;
   std::vector<std::string> history_;
-  ParserPtr parser_;
-  PipelinePtr pipeline_;
+  ParserSharedPtr parser_;
+  PipelineSharedPtr pipeline_;
 };
 
 using EngineImplPtr = EngineImpl::EngineImplPtr;

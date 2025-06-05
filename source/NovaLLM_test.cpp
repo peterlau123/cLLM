@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "NovaLLM/cLLM-cpp.h"
+#include "NovaLLM/NovaLLM-cpp.h"
 
 using namespace nova_llm;
 
@@ -20,30 +20,6 @@ class EngineImplTest : public ::testing::Test {
 TEST_F(EngineImplTest, InitializationTest) {
   auto engine = std::make_unique<Engine>();
   EXPECT_TRUE(engine->init());
-}
-
-// Test model parsing
-TEST_F(EngineImplTest, ParseModelTest) {
-  auto engine = std::make_unique<Engine>();
-  EXPECT_TRUE(engine->init());
-  EXPECT_TRUE(engine->parse("test_model.bin"));
-}
-
-// Test chat functionality
-TEST_F(EngineImplTest, ChatTest) {
-  auto engine = std::make_unique<Engine>();
-  EXPECT_TRUE(engine->init());
-  EXPECT_TRUE(engine->parse("test_model.bin"));
-
-  std::string response = engine->chat("Hello");
-  EXPECT_FALSE(response.empty());
-}
-
-// Test invalid model path
-TEST_F(EngineImplTest, InvalidModelPathTest) {
-  auto engine = std::make_unique<Engine>();
-  EXPECT_TRUE(engine->init());
-  EXPECT_FALSE(engine->parse("invalid/path/to/model"));
 }
 
 // Main function to run all tests

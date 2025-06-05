@@ -1,4 +1,9 @@
-cmake_minimum_required(VERSION 3.14...3.22)
+cmake_minimum_required(VERSION 3.23)
+
+# Add conan_provider.cmake to the list of files processed
+# by the project() command itself.
+# This MUST come BEFORE the project() command.
+list(APPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES cmake/conan_provider.cmake)
 
 # ===================== Project Options =====================
 option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
@@ -10,7 +15,7 @@ project(
   NovaLLM
   VERSION 0.1.0
   DESCRIPTION "A lightweight and efficient C/C++ library for Large Language Model (LLM) inference"
-  LANGUAGES CXX
+  LANGUAGES CXX C
   HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
@@ -23,18 +28,10 @@ if(NOVA_LLM_BUILD_TESTS)
   find_package(GTest REQUIRED)
 endif()
 
-# Find TVM package provided by Conan, only if integration is enabled
-if(NOVA_LLM_INTEGRATE_TVM)
-  find_package(tvm CONFIG REQUIRED)
-endif()
-
 # ===================== Build Guards ========================
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds not allowed. Please use a build directory.")
 endif()
-
-# ===================== CMake Options =======================
-include(cmake/options.cmake)
 
 # ===================== Source Files ========================
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
@@ -109,7 +106,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
-        DESTINATION include/${PROJECT_NAME}
+        DESTINATION include/
         FILES_MATCHING PATTERN "*.h"
 )
 

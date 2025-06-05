@@ -4,18 +4,20 @@
 
 namespace nova_llm {
 
-enum class DeviceType { CPU = 0, CUDA, METAL, UNKNOWN };
+enum class DeviceType : uint32_t { UNKNOWN = 0, CPU = 0x01, CUDA = 0x02, METAL = 0x04 };
 
-class NOVA_LLM_API Device {
+struct DeviceTypeFlags {
  public:
-  Device() = default;
-  virtual ~Device() = default;
+  [[nodiscard]] bool has(DeviceType type) const;
 
-  virtual bool init() = 0;
-  virtual bool isAvailable() const = 0;
-  virtual DeviceType type() const = 0;
+  void set(DeviceType type);
+
+  void clear(DeviceType type);
+
+  [[nodiscard]] constexpr DeviceType get() const;
+
+ private:
+  uint32_t flags_ = 0;
 };
-
-using DevicePtr = std::shared_ptr<Device>;
 
 }  // namespace nova_llm

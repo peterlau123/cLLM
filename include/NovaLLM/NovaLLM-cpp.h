@@ -8,16 +8,20 @@
 
 namespace nova_llm {
 
+class Impl;
+
 class NOVA_LLM_API Engine {
  public:
   Engine() = default;
-  virtual ~Engine() = default;
 
-  virtual bool init() = 0;
-  virtual bool isAvailable() const = 0;
-  virtual DeviceType type() const = 0;
+  ~Engine();
+
+  bool init();
+  void run();
+
+ private:
+  Impl* impl_;
 };
 
-using EnginePtr = std::shared_ptr<Engine>;
 
 }  // namespace nova_llm

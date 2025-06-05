@@ -113,7 +113,7 @@ class Tensor {
    *
    * @return int 元素总数
    */
-  int size() const { return size_; }
+  int totalElements() const { return ele_cnt_; }
 
   DataType dtype() const { return m_dtype_; }
 
@@ -121,19 +121,38 @@ class Tensor {
 
   uint8_t* data() const { return reinterpret_cast<uint8_t*>(data_); }
 
+  uint64_t capacity() const { return capacity_; }
+
+  DataSourceType dataFrom() const { return m_data_source_; }
+
+  uint32_t refCnt() const { return *ref_cnt_; }
+
+  Deleter deleter() const { return m_deleter_; }
+
   /**
    * @brief 析构函数
    */
   ~Tensor();
 
  private:
+  std::atomic<uint32_t>* allocRefCnt() { return new std::atomic<uint32_t>; }
+
+  void deallocRefCnt() {
+    if (this->ref_cnt_) {
+      delete this->ref_cnt_;
+      this->ref_cnt_ = nullptr;
+    }
+  }
+
   std::vector<uint32_t> dims_;  ///< 张量的维度数组
-  int size_;                    ///< 元素总数
-  void* data_;                  ///< 数据缓冲区
-  DataSourceType m_data_source_;
-  DataType m_dtype_;     ///< 数据类型
-  DeviceType m_device_;  ///< 设备类型
-  int ref_count_;        ///< 引用计数
+  uint32_t ele_cnt_ {0};        ///< 元素总数
+  void* data_ {nullptr};        ///< 数据缓冲区
+  uint64_t capacity_ {0};  ///< 数据缓冲区大小，单位为字节，大于等于size_*sizeof(m_dtype_)
+  DataSourceType m_data_source_ {DataSourceType::AUTO};
+  DataType m_dtype_ {DataType::UNKNOWN};       ///< 数据类型
+  DeviceType m_device_ {DeviceType::UNKNOWN};  ///< 设备类型
+  std::atomic<uint32_t>* ref_cnt_ {nullptr};   ///< 引用计数,TODO:important!
+  Deleter m_deleter_ = DefaultDeletor();       ///< 自定义删除器
 };
 
 }  // namespace nova_llm

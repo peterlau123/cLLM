@@ -7,7 +7,7 @@ class NovaLLMConan(ConanFile):
     name = "NovaLLM"
     version = "0.1.0" # Match your project version
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeDeps","CMakeToolchain"
 
     options = {
         "shared": [True, False],
@@ -27,12 +27,12 @@ class NovaLLMConan(ConanFile):
 
     # Requirements - these are the dependencies your project uses
     def requirements(self):
-        self.requires("fmt/10.2.1")
+        self.requires("fmt/11.1.3")
         if self.options.log_spdlog:
-            self.requires("spdlog/1.12.0")
+            self.requires("spdlog/1.15.1")
         if self.options.build_tests:
             self.requires("gtest/1.12.1")
-        if self.options.integrate_tvm:
+        if self.options.integrate_tvm: #TODO
             # *** IMPORTANT ***
             # Replace 'user/channel' with the actual user and channel 
             # you used when creating the local TVM package.
@@ -50,12 +50,7 @@ class NovaLLMConan(ConanFile):
             self.options.rm_safe("fPIC")
 
     def generate(self):
-        deps = CMakeDeps(self)
-        deps.generate()
-        tc = CMakeToolchain(self)
-        tc.variables["NOVA_LLM_ENABLE_LOGGING"] = self.options.log_spdlog
-        tc.variables["NOVA_LLM_BUILD_TESTS"] = self.options.build_tests
-        tc.generate()
+        pass
 
     def build(self):
         cmake = CMake(self)
