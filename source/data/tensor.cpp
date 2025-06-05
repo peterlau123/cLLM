@@ -125,7 +125,6 @@ Tensor::Tensor(const Tensor& other)
 
 Tensor& Tensor::operator=(const Tensor& other) {
   if (this->data_ != static_cast<decltype(data_)>(other.data())) {
-    this->ref_cnt_->fetch_sub(1);
     this->~Tensor();
     dims_ = other.dims();
     ele_cnt_ = other.totalElements();

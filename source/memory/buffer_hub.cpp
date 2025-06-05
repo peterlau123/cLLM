@@ -6,8 +6,8 @@
 
 namespace nova_llm {
 
-virtual vector<Size> DefaultSizeLevelStrategy::byteSizes() {
-  vector<Size> ret;
+std::vector<Size> DefaultSizeLevelStrategy::byteSizes() {
+  std::vector<Size> ret;
   uint32_t base = 64;
   uint32_t ratio = 2;
   for (uint64_t i = base; i < 1024;) {
@@ -17,8 +17,8 @@ virtual vector<Size> DefaultSizeLevelStrategy::byteSizes() {
   return ret;
 }
 
-virtual vector<Size> DefaultSizeLevelStrategy::kiloByteSizes() {
-  vector<Size> ret;
+std::vector<Size> DefaultSizeLevelStrategy::kiloByteSizes() {
+  std::vector<Size> ret;
   uint32_t base = 4;
   uint32_t ratio = 2;
   for (uint64_t i = base; i < 1024;) {
@@ -28,8 +28,8 @@ virtual vector<Size> DefaultSizeLevelStrategy::kiloByteSizes() {
   return ret;
 }
 
-virtual vector<Size> DefaultSizeLevelStrategy::megaByteSizes() {
-  vector<Size> ret;
+std::vector<Size> DefaultSizeLevelStrategy::megaByteSizes() {
+  std::vector<Size> ret;
   uint32_t base = 2;
   uint32_t ratio = 2;
   for (uint64_t i = base; i < 1024;) {
@@ -39,8 +39,8 @@ virtual vector<Size> DefaultSizeLevelStrategy::megaByteSizes() {
   return ret;
 }
 
-virtual vector<Size> DefaultSizeLevelStrategy::gigaByteSizes() {
-  vector<Size> ret;
+std::vector<Size> DefaultSizeLevelStrategy::gigaByteSizes() {
+  std::vector<Size> ret;
   uint32_t base = 1;
   uint32_t ratio = 2;
   for (uint64_t i = base; i < 10;) {

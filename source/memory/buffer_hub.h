@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 #include <unordered_map>
-
+#include <vector>
 #include "NovaLLM/common/device.h"
 #include "NovaLLM/memory/allocator.h"
 #include "NovaLLM/memory/buffer_define.h"
@@ -78,6 +78,7 @@ struct Size {
   Size& operator=(const Size& rhs) {
     total_bytes_ = rhs.totalBytes();
     convert_in_units(total_bytes_);
+    return *this;
   }
 
   [[nodiscard]] uint64_t totalBytes() const { return total_bytes_; }
@@ -114,13 +115,13 @@ using BlockPtr = Block::BlockPtr;
 
 class DefaultSizeLevelStrategy {
  public:
-  static vector<Size> byteSizes() const;
+  static std::vector<Size> byteSizes() ;
 
-  static vector<Size> kiloByteSizes() const;
+  static std::vector<Size> kiloByteSizes() ;
 
-  static vector<Size> megaByteSizes() const;
+  static std::vector<Size> megaByteSizes() ;
 
-  static vector<Size> gigaByteSizes() const;
+  static std::vector<Size> gigaByteSizes() ;
 };
 
 /*
