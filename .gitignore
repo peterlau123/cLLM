@@ -32,3 +32,4 @@ latex/
 *.gcno
 *.gcov
 coverage/
+CMakeUserPresets.json
