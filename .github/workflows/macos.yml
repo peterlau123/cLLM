@@ -40,6 +40,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-conan-
 
+      - name: Build NovaLLM package
+        run: |
+          conan create .. --user=local --channel=testing
+
       - name: configure
         run: |
           mkdir -p build

@@ -1,5 +1,5 @@
 [requires]
-NovaLLM/0.1.0
+NovaLLM/0.1.0@local/testing
 gtest/1.12.1
 fmt/9.1.0
 
