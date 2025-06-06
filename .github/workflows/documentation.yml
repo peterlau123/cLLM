@@ -54,6 +54,7 @@ jobs:
           cd build
           conan install .. --output-folder=. --build=missing
           cmake -B build \
+            -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
             -DCMAKE_BUILD_TYPE=Release \
             -DNOVA_LLM_BUILD_TESTS=OFF \
             -DNOVA_LLM_ENABLE_LOGGING=OFF
