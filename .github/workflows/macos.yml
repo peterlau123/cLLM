@@ -42,7 +42,7 @@ jobs:
 
       - name: Build NovaLLM package
         run: |
-          conan create .. --user=local --channel=testing
+          conan create . --user=local --channel=testing
 
       - name: configure
         run: |
