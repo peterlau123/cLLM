@@ -44,6 +44,7 @@ jobs:
         run: |
           mkdir -p build
           cd build
+          conan install .. --output-folder=. --build=missing
           cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DNOVA_LLM_BUILD_TESTS=ON -DNOVA_LLM_ENABLE_LOGGING=ON 
           cmake --build . -j4
           cmake --build . --target install
