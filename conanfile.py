@@ -6,6 +6,7 @@ from conan.tools.files import copy
 class NovaLLMConan(ConanFile):
     name = "novallm"
     version = "0.1.0" # Match your project version
+    exports_sources = "CMakeLists.txt", "source/*", "include/*", "cmake/*"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps","CMakeToolchain"
 

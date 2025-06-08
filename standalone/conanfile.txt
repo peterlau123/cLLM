@@ -1,5 +1,5 @@
 [requires]
-novallm/0.1.0
+novallm/0.1.0@local/testing
 cxxopts/3.0.0
 
 [generators]

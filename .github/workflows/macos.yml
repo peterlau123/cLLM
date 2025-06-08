@@ -40,21 +40,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-conan-
 
-      - name: Build NovaLLM package
-        run: |
-          conan create . --user=local --channel=testing --build=missing
-
-      - name: configure
+      - name: Build and install NovaLLM package
         run: |
           mkdir -p build
           cd build
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DNOVA_LLM_BUILD_TESTS=ON -DNOVA_LLM_ENABLE_LOGGING=ON 
+          cmake --build . -j4
+          cmake --build . --target install
+
+      - name: Conan create novallm package
+        run: |
+          conan create . --user=local --channel=testing --build=missing
+
+      - name: Build and test (gtest)
+        run: |
+          mkdir -p build-test
+          cd build-test
           conan install ../test --output-folder=. --build=missing
           cmake -S ../test -B . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
-
-      - name: build
-        run: cmake --build build -j4
-
-      - name: test
-        run: |
-          cd build
+          cmake --build . -j4
           ctest --build-config Debug
+
+      - name: Build and run standalone
+        run: |
+          mkdir -p build-standalone
+          cd build-standalone
+          conan install ../standalone --output-folder=. --build=missing
+          cmake -S ../standalone -B . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+          cmake --build . -j4
+          ./main
