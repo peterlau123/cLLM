@@ -10,6 +10,3 @@ CMakeToolchain
 [options]
 gtest/1.12.1:shared=False
 gtest/1.12.1:build_gmock=True
-gtest/1.12.1:build_gtest=True
-gtest/1.12.1:build_gtest_main=True
-gtest/1.12.1:build_gmock_main=True 
