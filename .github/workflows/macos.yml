@@ -40,33 +40,43 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-conan-
 
-      - name: Build and install NovaLLM package
+      - name: Build and install NovaLLM package with cmake --preset
         run: |
           mkdir -p build
           cd build
-          conan install .. --output-folder=. --build=missing
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DNOVA_LLM_BUILD_TESTS=ON -DNOVA_LLM_ENABLE_LOGGING=ON 
-          cmake --build . -j4
-          cmake --build . --target install
+          cp ../CMakePresets.json .
+          conan install .. --output-folder=conan --build=missing
+          source conan/build/Release/generators/conanbuild.sh
+          cmake -S .. --preset release
+          cmake --build . --config Release
+          cmake --install . --config Release
+          # Set CMAKE_PREFIX_PATH to include the install directory
+          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$(pwd)/install/lib/cmake/NovaLLM
 
-      - name: Conan create novallm package
+      - name: Create NovaLLM package
         run: |
           conan create . --user=local --channel=testing --build=missing
 
-      - name: Build and test (gtest)
+      - name: Build and test
         run: |
           mkdir -p build-test
           cd build-test
-          conan install ../test --output-folder=. --build=missing
-          cmake -S ../test -B . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
-          cmake --build . -j4
+          cp ../CMakePresets.json .
+          conan install ../test --output-folder=conan --build=missing
+          # source conan/build/Debug/generators/conanbuild.sh
+          # Add the install directory to CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:../build/install/lib/cmake/NovaLLM
+          cmake -S ../test --preset debug
+          cmake --build . --config Debug
           ctest --build-config Debug
 
       - name: Build and run standalone
         run: |
           mkdir -p build-standalone
           cd build-standalone
-          conan install ../standalone --output-folder=. --build=missing
-          cmake -S ../standalone -B . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
-          cmake --build . -j4
+          cp ../CMakePresets.json .
+          conan install ../standalone --output-folder=conan --build=missing
+          source conan/build/Release/generators/conanbuild.sh
+          cmake -S ../standalone --preset release
+          cmake --build . --config Release
           ./main

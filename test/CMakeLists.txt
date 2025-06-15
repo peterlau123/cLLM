@@ -13,6 +13,10 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
+find_package(NovaLLM REQUIRED)
+find_package(GTest REQUIRED)
+find_package(fmt REQUIRED)
+
 # ---- Create binary ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
@@ -20,9 +24,12 @@ add_executable(${PROJECT_NAME} ${sources})
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
-    CONAN_PKG::NovaLLM
-    CONAN_PKG::gtest
-    CONAN_PKG::fmt
+    NovaLLM::NovaLLM
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+    GTest::gmock_main
+    fmt::fmt
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
