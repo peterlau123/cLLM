@@ -1,5 +1,6 @@
 # Build and Conan
 build/
+build-test/
 cmake-build-*/
 install/
 CMakeFiles/

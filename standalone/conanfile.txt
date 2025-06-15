@@ -1,8 +1,8 @@
 [requires]
-novallm/0.1.0@local/testing
+NovaLLM/0.1.0@local/testing
 cxxopts/3.0.0
 spdlog/1.12.0
-fmt/11.1.3
+fmt/10.2.1
 
 [generators]
 CMakeDeps

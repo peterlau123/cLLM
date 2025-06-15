@@ -46,12 +46,10 @@ jobs:
           cd build
           cp ../CMakePresets.json .
           conan install .. --output-folder=conan --build=missing
-          source conan/build/Release/generators/conanbuild.sh
+          echo "Build with release preset"
           cmake -S .. --preset release
           cmake --build . --config Release
           cmake --install . --config Release
-          # Set CMAKE_PREFIX_PATH to include the install directory
-          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$(pwd)/install/lib/cmake/NovaLLM
 
       - name: Create NovaLLM package
         run: |
@@ -63,11 +61,11 @@ jobs:
           cd build-test
           cp ../CMakePresets.json .
           conan install ../test --output-folder=conan --build=missing
-          # source conan/build/Debug/generators/conanbuild.sh
+
           # Add the install directory to CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:../build/install/lib/cmake/NovaLLM
+          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:./conan
           cmake -S ../test --preset debug
-          cmake --build . --config Debug
+          cmake --build ../test/build --config Debug
           ctest --build-config Debug
 
       - name: Build and run standalone
@@ -76,7 +74,6 @@ jobs:
           cd build-standalone
           cp ../CMakePresets.json .
           conan install ../standalone --output-folder=conan --build=missing
-          source conan/build/Release/generators/conanbuild.sh
           cmake -S ../standalone --preset release
-          cmake --build . --config Release
+          cmake --build ../standalone/build --config Release
           ./main

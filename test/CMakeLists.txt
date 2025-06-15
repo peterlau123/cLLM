@@ -13,14 +13,22 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
+# Find NovaLLM package
 find_package(NovaLLM REQUIRED)
 find_package(GTest REQUIRED)
 find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
 
 # ---- Create binary ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
+
+# Add include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_BINARY_DIR}/conan/include
+)
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
@@ -30,6 +38,7 @@ target_link_libraries(${PROJECT_NAME}
     GTest::gmock
     GTest::gmock_main
     fmt::fmt
+    spdlog::spdlog
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
