@@ -42,5 +42,15 @@ class CPUAllocator : public Allocator<CPUAllocator> {
   void do_deallocate(void* ptr);
 };
 
+class CUDAAllocator : public Allocator<CUDAAllocator> {
+ public:
+  CUDAAllocator();
+  ~CUDAAllocator();
+
+  void* do_allocate(size_t size);
+
+  void do_deallocate(void* ptr);
+};
+
 
 }  // namespace nova_llm

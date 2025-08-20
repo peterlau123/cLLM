@@ -64,6 +64,9 @@ class BufferManager {
   ~BufferManager();
 
  private:
+
+  void destroy();
+
   BufferManager() = default;
 
   bool init(const Config& config);
