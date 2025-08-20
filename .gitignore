@@ -33,3 +33,4 @@ latex/
 *.gcov
 coverage/
 CMakeUserPresets.json
+build-test/
