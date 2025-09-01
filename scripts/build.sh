@@ -107,7 +107,15 @@ cd "$BUILD_DIR" || exit 1
 
 # Install dependencies with Conan
 print_message "green" "Installing dependencies..."
-if ! conan install .. --output-folder=. --build=missing; then
+
+# Convert CMake ON/OFF to Conan True/False
+if [ "$ENABLE_TESTS" = "ON" ]; then
+    CONAN_BUILD_TESTS="True"
+else
+    CONAN_BUILD_TESTS="False"
+fi
+
+if ! conan install .. --output-folder=. --build=missing -s build_type="$BUILD_TYPE" -o build_tests="$CONAN_BUILD_TESTS"; then
     print_message "red" "Failed to install dependencies"
     exit 1
 fi
@@ -116,8 +124,9 @@ fi
 print_message "green" "Configuring project..."
 if ! cmake .. \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DNOVALLM_BUILD_TESTS="$ENABLE_TESTS" \
-    -DNOVALLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
+    -DNOVA_LLM_BUILD_TESTS="$ENABLE_TESTS" \
+    -DNOVA_LLM_ENABLE_LOGGING="$ENABLE_LOGGING" \
+    -DCMAKE_TOOLCHAIN_FILE=build/$BUILD_TYPE/generators/conan_toolchain.cmake; then
     print_message "red" "CMake configuration failed"
     exit 1
 fi

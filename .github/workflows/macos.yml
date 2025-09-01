@@ -10,7 +10,7 @@ on:
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
-  CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm_modules
+  # Using Conan for dependency management
 
 jobs:
   build:

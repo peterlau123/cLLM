@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.23)
 # ===================== Project Options =====================
 option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
 option(NOVA_LLM_BUILD_TESTS "Build tests with GTest" OFF)
-option(NOVA_LLM_INTEGRATE_TVM "Integrate TVM" OFF)
 
 # ===================== Project Info ========================
 project(
@@ -50,7 +49,11 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 # ===================== Test Executable ====================
 if(NOVA_LLM_BUILD_TESTS)
   add_executable(${PROJECT_NAME}_test ${test_sources})
-  set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD 17)
+  set_target_properties(${PROJECT_NAME}_test PROPERTIES 
+    CXX_STANDARD 17
+    INSTALL_RPATH "@executable_path/../lib"
+    BUILD_WITH_INSTALL_RPATH TRUE
+  )
   target_include_directories(${PROJECT_NAME}_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE 
     ${PROJECT_NAME}
@@ -65,9 +68,6 @@ endif()
 set(DEPENDENCY_LIST fmt::fmt)
 if(NOVA_LLM_ENABLE_LOGGING)
   list(APPEND DEPENDENCY_LIST spdlog::spdlog)
-endif()
-if(NOVA_LLM_INTEGRATE_TVM)
-  list(APPEND DEPENDENCY_LIST tvm::tvm)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCY_LIST})
 
@@ -90,6 +90,16 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include
 )
+
+# Install test executable if tests are enabled
+if(NOVA_LLM_BUILD_TESTS)
+  install(TARGETS ${PROJECT_NAME}_test
+          RUNTIME DESTINATION bin
+  )
+  
+  # Note: GTest libraries are static and linked into the test executable
+  # No need to install them separately
+endif()
 
 install(DIRECTORY include/
         DESTINATION include/
@@ -124,15 +134,13 @@ install(EXPORT ${PROJECT_NAME}Targets
 )
 
 # ===================== Conan Dependencies ==================
-# 只在本地开发时 find_package
-if(NOT DEFINED CONAN_EXPORTED)
-  find_package(fmt REQUIRED)
-  if(NOVA_LLM_ENABLE_LOGGING)
-    find_package(spdlog REQUIRED)
-  endif()
-  if(NOVA_LLM_BUILD_TESTS)
-    find_package(GTest REQUIRED)
-  endif()
+# Find packages managed by Conan
+find_package(fmt REQUIRED)
+if(NOVA_LLM_ENABLE_LOGGING)
+  find_package(spdlog REQUIRED)
+endif()
+if(NOVA_LLM_BUILD_TESTS)
+  find_package(GTest REQUIRED)
 endif()
 
 # ===================== Summary =============================
@@ -141,5 +149,5 @@ message(STATUS "  Logging:         ${NOVA_LLM_ENABLE_LOGGING}")
 message(STATUS "  Build tests:     ${NOVA_LLM_BUILD_TESTS}")
 message(STATUS "  Install prefix:  ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "  C++ Standard:    17")
-message(STATUS "  Conan deps:      fmt, spdlog, gtest")
+message(STATUS "  Dependencies:     fmt, spdlog, gtest (via Conan)")
 message(STATUS "====================================\n")

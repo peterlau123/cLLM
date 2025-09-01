@@ -17,7 +17,6 @@ A lightweight and efficient C/C++ library for Large Language Model (LLM) inferen
 - 🚀 **Lightweight**: Minimal dependencies, focusing on core functionality
 - 🔧 **Extensible**: Easy to extend with custom models and optimizations
 - 🎯 **Efficient**: Support for extreme low-bit quantization
-- ⚡ **Fast**: Integration with TVM for model compilation
 - 🛠️ **Flexible**: Support for OpenAI Triton and ThunderKittens kernels
 
 ## Supported Models
@@ -110,15 +109,6 @@ open build/docs/html/index.html
 auto quantized_model = NovaLLM::quantize_model(model, NovaLLM::QuantizationType::INT8);
 ```
 
-### TVM Integration
-
-```cpp
-#include <NovaLLM/tvm.hpp>
-
-// Example TVM compilation
-auto compiled_model = NovaLLM::compile_with_tvm(model, "cuda");
-```
-
 ### Custom Kernel Integration
 
 ```cpp
@@ -138,7 +128,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [TVM](https://tvm.apache.org/) for model compilation support
 - [OpenAI Triton](https://github.com/openai/triton) for kernel optimizations
 - [ThunderKittens](https://github.com/HazyResearch/ThunderKittens) for kernel implementations
 
