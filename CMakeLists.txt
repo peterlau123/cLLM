@@ -49,7 +49,11 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 # ===================== Test Executable ====================
 if(NOVA_LLM_BUILD_TESTS)
   add_executable(${PROJECT_NAME}_test ${test_sources})
-  set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD 17)
+  set_target_properties(${PROJECT_NAME}_test PROPERTIES 
+    CXX_STANDARD 17
+    INSTALL_RPATH "@executable_path/../lib"
+    BUILD_WITH_INSTALL_RPATH TRUE
+  )
   target_include_directories(${PROJECT_NAME}_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE 
     ${PROJECT_NAME}
@@ -86,6 +90,16 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include
 )
+
+# Install test executable if tests are enabled
+if(NOVA_LLM_BUILD_TESTS)
+  install(TARGETS ${PROJECT_NAME}_test
+          RUNTIME DESTINATION bin
+  )
+  
+  # Note: GTest libraries are static and linked into the test executable
+  # No need to install them separately
+endif()
 
 install(DIRECTORY include/
         DESTINATION include/

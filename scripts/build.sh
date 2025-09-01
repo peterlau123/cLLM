@@ -107,7 +107,15 @@ cd "$BUILD_DIR" || exit 1
 
 # Install dependencies with Conan
 print_message "green" "Installing dependencies..."
-if ! conan install .. --output-folder=. --build=missing -s build_type="$BUILD_TYPE"; then
+
+# Convert CMake ON/OFF to Conan True/False
+if [ "$ENABLE_TESTS" = "ON" ]; then
+    CONAN_BUILD_TESTS="True"
+else
+    CONAN_BUILD_TESTS="False"
+fi
+
+if ! conan install .. --output-folder=. --build=missing -s build_type="$BUILD_TYPE" -o build_tests="$CONAN_BUILD_TESTS"; then
     print_message "red" "Failed to install dependencies"
     exit 1
 fi
