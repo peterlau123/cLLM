@@ -116,8 +116,9 @@ fi
 print_message "green" "Configuring project..."
 if ! cmake .. \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DNOVALLM_BUILD_TESTS="$ENABLE_TESTS" \
-    -DNOVALLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
+    -DNOVA_LLM_BUILD_TESTS="$ENABLE_TESTS" \
+    -DNOVA_LLM_ENABLE_LOGGING="$ENABLE_LOGGING" \
+    -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake; then
     print_message "red" "CMake configuration failed"
     exit 1
 fi

@@ -15,7 +15,7 @@ on:
       - 'release/**'
 
 env:
-  CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm_modules
+  # Using Conan for dependency management
 
 jobs:
   build:
