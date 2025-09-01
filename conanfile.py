@@ -15,7 +15,6 @@ class NovaLLMConan(ConanFile):
         "fPIC": [True, False],
         "log_spdlog": [True, False], # Corresponds to NOVA_LLM_ENABLE_LOGGING
         "build_tests": [True, False], # Corresponds to NOVA_LLM_BUILD_TESTS
-        "integrate_tvm": [True, False], # Option to integrate TVM
     }
 
     default_options = {
@@ -23,7 +22,6 @@ class NovaLLMConan(ConanFile):
         "fPIC": True,
         "log_spdlog": True,
         "build_tests": False,
-        "integrate_tvm": False, # Default to NOT integrating TVM
     }
 
     # Requirements - these are the dependencies your project uses
@@ -33,11 +31,6 @@ class NovaLLMConan(ConanFile):
             self.requires("spdlog/1.15.1")
         if self.options.build_tests:
             self.requires("gtest/1.12.1")
-        if self.options.integrate_tvm: #TODO
-            # *** IMPORTANT ***
-            # Replace 'user/channel' with the actual user and channel 
-            # you used when creating the local TVM package.
-            self.requires("tvm/0.20.0@user/channel") 
 
     def config_options(self):
         if self.settings.os == "Windows":
