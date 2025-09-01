@@ -35,6 +35,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install conan
 
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
       - name: Cache Conan packages
         uses: actions/cache@v4
         with:
@@ -53,7 +56,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DNOVA_LLM_BUILD_TESTS=${{ matrix.enable_tests }} \
             -DNOVA_LLM_ENABLE_LOGGING=${{ matrix.enable_logging }} \
-            -DENABLE_TEST_COVERAGE=${{ matrix.build_type == 'Debug' }}
+            -DENABLE_TEST_COVERAGE=${{ matrix.build_type == 'Debug' }} \
+            -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
 
       - name: Build
         run: |

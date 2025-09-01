@@ -11,7 +11,7 @@
 #   -h, --help      Show this help message
 
 # Default values
-BUILD_TYPE="Release"
+BUILD_TYPE="release"
 BUILD_DIR="build"
 ENABLE_TESTS="OFF"
 ENABLE_LOGGING="ON"
@@ -21,11 +21,11 @@ CLEAN_BUILD=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         -d|--debug)
-            BUILD_TYPE="Debug"
+            BUILD_TYPE="debug"
             shift
             ;;
         -r|--release)
-            BUILD_TYPE="Release"
+            BUILD_TYPE="release"
             shift
             ;;
         -t|--tests)
@@ -94,6 +94,10 @@ if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p "$BUILD_DIR"
 fi
 
+# Copy CMakePresets.json to build directory
+print_message "green" "Copying CMake presets..."
+cp ../CMakePresets.json "$BUILD_DIR/"
+
 # Print build configuration
 print_message "green" "\nBuild Configuration:"
 echo "  Build Type:   $BUILD_TYPE"
@@ -107,31 +111,34 @@ cd "$BUILD_DIR" || exit 1
 
 # Install dependencies with Conan
 print_message "green" "Installing dependencies..."
-if ! conan install .. --output-folder=. --build=missing; then
+if ! conan install .. --output-folder=. --build=missing -s build_type=${BUILD_TYPE^}; then
     print_message "red" "Failed to install dependencies"
     exit 1
 fi
 
-# Configure with CMake
+# Source Conan environment
+print_message "green" "Setting up Conan environment..."
+source build/${BUILD_TYPE^}/generators/conanbuild.sh
+
+# Configure with CMake using presets
 print_message "green" "Configuring project..."
-if ! cmake .. \
-    -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DNOVALLM_BUILD_TESTS="$ENABLE_TESTS" \
-    -DNOVALLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
+if ! cmake -S .. --preset $BUILD_TYPE \
+    -DNOVA_LLM_BUILD_TESTS="$ENABLE_TESTS" \
+    -DNOVA_LLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
     print_message "red" "CMake configuration failed"
     exit 1
 fi
 
-# Build the project
+# Build the project using presets
 print_message "green" "Building project..."
-if ! cmake --build . --config "$BUILD_TYPE"; then
+if ! cmake --build . --config ${BUILD_TYPE^}; then
     print_message "red" "Build failed"
     exit 1
 fi
 
 # Install the project
 print_message "green" "Installing project..."
-if ! cmake --install . --config "$BUILD_TYPE"; then
+if ! cmake --install . --config ${BUILD_TYPE^}; then
     print_message "red" "Installation failed"
     exit 1
 fi

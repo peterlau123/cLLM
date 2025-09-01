@@ -19,18 +19,61 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/cache@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: "**/cpm_modules"
-          key: ${{ github.workflow }}-cpm-modules-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
+          python-version: '3.10'
 
-      - name: configure
-        run: cmake -Stest -Bbuild -DCMAKE_BUILD_TYPE=Debug
-
-      - name: build
-        run: cmake --build build -j4
-
-      - name: test
+      - name: Install Conan
         run: |
+          python -m pip install --upgrade pip
+          pip install conan
+
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-conan-${{ hashFiles('**/conanfile.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-conan-
+
+      - name: Build and install NovaLLM package with cmake --preset
+        run: |
+          mkdir -p build
           cd build
+          cp ../CMakePresets.json .
+          conan install .. --output-folder=conan --build=missing
+          echo "Build with release preset"
+          cmake -S .. --preset release
+          cmake --build . --config Release
+          cmake --install . --config Release
+
+      - name: Create NovaLLM package
+        run: |
+          conan create . --user=local --channel=testing --build=missing
+
+      - name: Build and test
+        run: |
+          mkdir -p build-test
+          cd build-test
+          cp ../CMakePresets.json .
+          conan install ../test --output-folder=conan --build=missing
+
+          # Add the install directory to CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:./conan
+          cmake -S ../test --preset debug
+          cmake --build ../test/build --config Debug
           ctest --build-config Debug
+
+      - name: Build and run standalone
+        run: |
+          mkdir -p build-standalone
+          cd build-standalone
+          cp ../CMakePresets.json .
+          conan install ../standalone --output-folder=conan --build=missing
+          cmake -S ../standalone --preset release
+          cmake --build ../standalone/build --config Release
+          ./main

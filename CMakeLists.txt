@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
 
-# Add conan_provider.cmake to the list of files processed
-# by the project() command itself.
-# This MUST come BEFORE the project() command.
-list(APPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES cmake/conan_provider.cmake)
-
 # ===================== Project Options =====================
 option(NOVA_LLM_ENABLE_LOGGING "Enable logging with spdlog" ON)
 option(NOVA_LLM_BUILD_TESTS "Build tests with GTest" OFF)
@@ -20,12 +15,16 @@ project(
 )
 
 # ===================== Conan Dependencies ==================
-find_package(fmt REQUIRED)
-if(NOVA_LLM_ENABLE_LOGGING)
-  find_package(spdlog REQUIRED)
-endif()
-if(NOVA_LLM_BUILD_TESTS)
-  find_package(GTest REQUIRED)
+# 只在本地开发时 find_package
+if(NOT DEFINED CONAN_EXPORTED)
+  list(APPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES cmake/conan_provider.cmake)
+  find_package(fmt REQUIRED)
+  if(NOVA_LLM_ENABLE_LOGGING)
+    find_package(spdlog REQUIRED)
+  endif()
+  if(NOVA_LLM_BUILD_TESTS)
+    find_package(GTest REQUIRED)
+  endif()
 endif()
 
 # ===================== Build Guards ========================
