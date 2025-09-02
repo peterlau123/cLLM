@@ -1,12 +1,12 @@
 #include "buffer_hub.h"
 
-#if NOVA_LLM_BUILD_TESTS
+#if EnableModuleTest
 #include <gtest/gtest.h>
 
 using namespace nova_llm;
 
 class CPUBufferHubTest : public ::testing::Test {
-    public:
+public:
     const BufferHub* getBufferHub() const{
         return buffer_hub_;
     }
@@ -17,7 +17,7 @@ protected:
         //set config
         config.device_type = DeviceType::CPU;
         config.size_levels=std::vector<Size>{Size(0, 0, 0, 1)};
-        config.alloc = std::make_shared<CPUAllocator>();
+        config.allocator = std::make_shared<CPUAllocator>();
 
         buffer_hub_ = BufferHub::Builder::build(config);
     }
@@ -28,39 +28,41 @@ protected:
     BufferHub* buffer_hub_;
 };
 
-TEST(CPUBufferHubTest, Init) {
-    CPUBufferHubTest test;
-    auto* buffer_hub = test.getBufferHub();
-    EXPECT_NE(buffer_hub, nullptr);
+TEST_F(CPUBufferHubTest, Init) {
+    EXPECT_NE(getBufferHub(), nullptr);
 }
 
-TEST(CPUBufferHubTest, GetBlock) {
-    CPUBufferHubTest test;
-    auto* buffer_hub = test.getBufferHub();
-
-    auto buffer = buffer_hub->getBlock(1024);
+TEST_F(CPUBufferHubTest, GetBlock) {
+    auto buffer = getBufferHub()->getBlock(1024);
 
     EXPECT_NE(buffer.data, nullptr);
     EXPECT_EQ(buffer.size, 1024);
     EXPECT_EQ(buffer.device_type, DeviceType::CPU);
 
-    buffer_hub->put(buffer);
+    getBufferHub()->put(buffer);
 }
 
-TEST(CPUBufferHubTest, PutBlock) {
-    CPUBufferHubTest test;
-    auto* buffer_hub = test.getBufferHub();
+TEST_F(CPUBufferHubTest, PutBlock) {
+    auto* block = getBufferHub()->getBlock(1024);
 
-    auto* block = buffer_hub->getBlock(1024);
-
-    buffer_hub->put(block);
+    EXPECT_NE(block, nullptr);
     EXPECT_EQ(block->data, nullptr);
     EXPECT_EQ(block->size, 0);
     EXPECT_EQ(block->ref_cnt, 0);
+
+    getBufferHub()->put(block);
 }
 
-TEST(CPUBufferHubTest, PutBlockFromBuffer) {
-}
 
+TEST_F(CPUBufferHubTest, PutBlockFromBuffer) {
+    auto* buffer = getBufferHub()->getBlock(1024);
+
+    EXPECT_NE(buffer, nullptr);
+    EXPECT_EQ(buffer->data, nullptr);
+    EXPECT_EQ(buffer->totalElements(), 0);
+    EXPECT_EQ(buffer->ref_cnt, 0);
+
+    getBufferHub()->putBlockFromBuffer(buffer);
+}
 
 #endif
