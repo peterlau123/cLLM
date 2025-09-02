@@ -13,6 +13,19 @@ project(
   HOMEPAGE_URL  "https://github.com/peterlau123/NovaLLM"
 )
 
+# ===================== Conan Dependencies ==================
+# 只在本地开发时 find_package
+if(NOT DEFINED CONAN_EXPORTED)
+  list(APPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES cmake/conan_provider.cmake)
+  find_package(fmt REQUIRED)
+  if(NOVA_LLM_ENABLE_LOGGING)
+    find_package(spdlog REQUIRED)
+  endif()
+  if(NOVA_LLM_BUILD_TESTS)
+    find_package(GTest REQUIRED)
+  endif()
+endif()
+
 # ===================== Build Guards ========================
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds not allowed. Please use a build directory.")
@@ -132,6 +145,7 @@ install(EXPORT ${PROJECT_NAME}Targets
         NAMESPACE ${PROJECT_NAME}::
         DESTINATION lib/cmake/${PROJECT_NAME}
 )
+
 
 # ===================== Conan Dependencies ==================
 # Find packages managed by Conan
