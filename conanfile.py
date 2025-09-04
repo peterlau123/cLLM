@@ -12,7 +12,7 @@ class NovallmConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "log_spdlog": [True, False], # Corresponds to NOVA_LLM_ENABLE_LOGGING
+        "enable_logging": [True, False], # Corresponds to NOVA_LLM_ENABLE_LOGGING
         "build_tests": [True, False], # Corresponds to NOVA_LLM_BUILD_TESTS
     }
 
@@ -48,7 +48,6 @@ class NovallmConan(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["NOVA_LLM_ENABLE_LOGGING"] = self.options.enable_logging
         tc.variables["NOVA_LLM_BUILD_TESTS"] = self.options.build_tests
-        tc.variables["NOVA_LLM_INTEGRATE_TVM"] = self.options.integrate_tvm
         tc.generate()
 
     def build(self):

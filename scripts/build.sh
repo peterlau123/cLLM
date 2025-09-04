@@ -11,7 +11,7 @@
 #   -h, --help      Show this help message
 
 # Default values
-BUILD_TYPE="release"
+BUILD_TYPE="Release"  # 改为大写的Release
 BUILD_DIR="build"
 ENABLE_TESTS="OFF"
 ENABLE_LOGGING="ON"
@@ -21,11 +21,11 @@ CLEAN_BUILD=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         -d|--debug)
-            BUILD_TYPE="debug"
+            BUILD_TYPE="Debug"    # 改为大写的Debug
             shift
             ;;
         -r|--release)
-            BUILD_TYPE="release"
+            BUILD_TYPE="Release"  # 改为大写的Release
             shift
             ;;
         -t|--tests)
@@ -89,14 +89,20 @@ if [ "$CLEAN_BUILD" = true ]; then
     rm -rf "$BUILD_DIR"
 fi
 
+if [  -d "install" ]; then
+    print_message "yellow" "Cleaning install directory..."
+    rm -rf "install"
+fi
+
 if [ ! -d "$BUILD_DIR" ]; then
     print_message "green" "Creating build directory..."
     mkdir -p "$BUILD_DIR"
 fi
 
+
 # Copy CMakePresets.json to build directory
 print_message "green" "Copying CMake presets..."
-cp ../CMakePresets.json "$BUILD_DIR/"
+cp CMakePresets.json "$BUILD_DIR/"
 
 # Print build configuration
 print_message "green" "\nBuild Configuration:"
@@ -126,7 +132,7 @@ fi
 
 # Source Conan environment
 print_message "green" "Setting up Conan environment..."
-source build/${BUILD_TYPE^}/generators/conanbuild.sh
+source build/${BUILD_TYPE}/generators/conanbuild.sh
 
 # Configure with CMake using presets
 print_message "green" "Configuring project..."
@@ -141,14 +147,14 @@ fi
 
 # Build the project using presets
 print_message "green" "Building project..."
-if ! cmake --build . --config ${BUILD_TYPE^}; then
+if ! cmake --build . --config $BUILD_TYPE; then    # 移除 ${BUILD_TYPE^}
     print_message "red" "Build failed"
     exit 1
 fi
 
 # Install the project
 print_message "green" "Installing project..."
-if ! cmake --install . --config ${BUILD_TYPE^}; then
+if ! cmake --install . --config $BUILD_TYPE; then  # 移除 ${BUILD_TYPE^}
     print_message "red" "Installation failed"
     exit 1
 fi
