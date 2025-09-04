@@ -12,9 +12,8 @@ class NovallmConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "enable_logging": [True, False],
-        "build_tests": [True, False],
-        "integrate_tvm": [True, False],
+        "enable_logging": [True, False], # Corresponds to NOVA_LLM_ENABLE_LOGGING
+        "build_tests": [True, False], # Corresponds to NOVA_LLM_BUILD_TESTS
     }
 
     default_options = {
@@ -22,7 +21,6 @@ class NovallmConan(ConanFile):
         "fPIC": True,
         "enable_logging": True,
         "build_tests": False,
-        "integrate_tvm": False,
     }
 
     # Requirements - these are the dependencies your project uses
@@ -32,11 +30,6 @@ class NovallmConan(ConanFile):
             self.requires("spdlog/1.12.0")
         if self.options.build_tests:
             self.requires("gtest/1.12.1")
-        if self.options.integrate_tvm: #TODO
-            # *** IMPORTANT ***
-            # Replace 'user/channel' with the actual user and channel 
-            # you used when creating the local TVM package.
-            self.requires("tvm/0.20.0@user/channel") 
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -55,7 +48,6 @@ class NovallmConan(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["NOVA_LLM_ENABLE_LOGGING"] = self.options.enable_logging
         tc.variables["NOVA_LLM_BUILD_TESTS"] = self.options.build_tests
-        tc.variables["NOVA_LLM_INTEGRATE_TVM"] = self.options.integrate_tvm
         tc.generate()
 
     def build(self):

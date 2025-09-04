@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#if NOVA_LLM_BUILD_TESTS
+#if EnableModuleTest
 
 using namespace nova_llm;
 
@@ -20,7 +20,7 @@ class TensorTest : public ::testing::Test {
 // 测试默认构造函数
 TEST_F(TensorTest, DefaultConstructor) {
   Tensor tensor;
-  EXPECT_EQ(tensor.size(), 0);
+  EXPECT_EQ(tensor.totalElements(), 0);
   EXPECT_TRUE(tensor.dims().empty());
   EXPECT_EQ(tensor.dtype(), DataType::UNKNOWN);
   EXPECT_EQ(tensor.device(), DeviceType::UNKNOWN);
@@ -31,7 +31,7 @@ TEST_F(TensorTest, ConstructWithDims) {
   std::vector<uint32_t> dims = {2, 3, 4};
   Tensor tensor(dims, DataType::FLOAT32, DeviceType::CPU);
 
-  EXPECT_EQ(tensor.size(), 24);  // 2*3*4
+  EXPECT_EQ(tensor.totalElements(), 24);  // 2*3*4
   EXPECT_EQ(tensor.dims(), dims);
   EXPECT_EQ(tensor.dtype(), DataType::FLOAT32);
   EXPECT_EQ(tensor.device(), DeviceType::CPU);
@@ -53,7 +53,7 @@ TEST_F(TensorTest, CopyConstruction) {
   Tensor original(dims, DataType::FLOAT32, DeviceType::CPU);
   Tensor copied(original);
 
-  EXPECT_EQ(copied.size(), original.size());
+  EXPECT_EQ(copied.totalElements(), original.totalElements());
   EXPECT_EQ(copied.dims(), original.dims());
   EXPECT_EQ(copied.dtype(), original.dtype());
   EXPECT_EQ(copied.device(), original.device());
@@ -66,7 +66,7 @@ TEST_F(TensorTest, AssignmentOperator) {
   Tensor assigned;
   assigned = original;
 
-  EXPECT_EQ(assigned.size(), original.size());
+  EXPECT_EQ(assigned.totalElements(), original.totalElements());
   EXPECT_EQ(assigned.dims(), original.dims());
   EXPECT_EQ(assigned.dtype(), original.dtype());
   EXPECT_EQ(assigned.device(), original.device());
@@ -78,7 +78,7 @@ TEST_F(TensorTest, MemoryAllocation) {
   Tensor tensor(dims, DataType::FLOAT32, DeviceType::CPU);
 
   EXPECT_NE(tensor.data(), nullptr);
-  EXPECT_EQ(tensor.size(), 6);
+  EXPECT_EQ(tensor.totalElements(), 6);
 }
 
 #endif

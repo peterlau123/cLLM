@@ -11,7 +11,7 @@
 #   -h, --help      Show this help message
 
 # Default values
-BUILD_TYPE="release"
+BUILD_TYPE="Release"  # 改为大写的Release
 BUILD_DIR="build"
 ENABLE_TESTS="OFF"
 ENABLE_LOGGING="ON"
@@ -21,11 +21,11 @@ CLEAN_BUILD=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         -d|--debug)
-            BUILD_TYPE="debug"
+            BUILD_TYPE="Debug"    # 改为大写的Debug
             shift
             ;;
         -r|--release)
-            BUILD_TYPE="release"
+            BUILD_TYPE="Release"  # 改为大写的Release
             shift
             ;;
         -t|--tests)
@@ -89,14 +89,20 @@ if [ "$CLEAN_BUILD" = true ]; then
     rm -rf "$BUILD_DIR"
 fi
 
+if [  -d "install" ]; then
+    print_message "yellow" "Cleaning install directory..."
+    rm -rf "install"
+fi
+
 if [ ! -d "$BUILD_DIR" ]; then
     print_message "green" "Creating build directory..."
     mkdir -p "$BUILD_DIR"
 fi
 
+
 # Copy CMakePresets.json to build directory
 print_message "green" "Copying CMake presets..."
-cp ../CMakePresets.json "$BUILD_DIR/"
+cp CMakePresets.json "$BUILD_DIR/"
 
 # Print build configuration
 print_message "green" "\nBuild Configuration:"
@@ -111,34 +117,44 @@ cd "$BUILD_DIR" || exit 1
 
 # Install dependencies with Conan
 print_message "green" "Installing dependencies..."
-if ! conan install .. --output-folder=. --build=missing -s build_type=${BUILD_TYPE^}; then
+
+# Convert CMake ON/OFF to Conan True/False
+if [ "$ENABLE_TESTS" = "ON" ]; then
+    CONAN_BUILD_TESTS="True"
+else
+    CONAN_BUILD_TESTS="False"
+fi
+
+if ! conan install .. --output-folder=. --build=missing -s build_type="$BUILD_TYPE" -o build_tests="$CONAN_BUILD_TESTS"; then
     print_message "red" "Failed to install dependencies"
     exit 1
 fi
 
 # Source Conan environment
 print_message "green" "Setting up Conan environment..."
-source build/${BUILD_TYPE^}/generators/conanbuild.sh
+source build/${BUILD_TYPE}/generators/conanbuild.sh
 
 # Configure with CMake using presets
 print_message "green" "Configuring project..."
-if ! cmake -S .. --preset $BUILD_TYPE \
+if ! cmake .. \
+    -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DNOVA_LLM_BUILD_TESTS="$ENABLE_TESTS" \
-    -DNOVA_LLM_ENABLE_LOGGING="$ENABLE_LOGGING"; then
+    -DNOVA_LLM_ENABLE_LOGGING="$ENABLE_LOGGING" \
+    -DCMAKE_TOOLCHAIN_FILE=build/$BUILD_TYPE/generators/conan_toolchain.cmake; then
     print_message "red" "CMake configuration failed"
     exit 1
 fi
 
 # Build the project using presets
 print_message "green" "Building project..."
-if ! cmake --build . --config ${BUILD_TYPE^}; then
+if ! cmake --build . --config $BUILD_TYPE; then    # 移除 ${BUILD_TYPE^}
     print_message "red" "Build failed"
     exit 1
 fi
 
 # Install the project
 print_message "green" "Installing project..."
-if ! cmake --install . --config ${BUILD_TYPE^}; then
+if ! cmake --install . --config $BUILD_TYPE; then  # 移除 ${BUILD_TYPE^}
     print_message "red" "Installation failed"
     exit 1
 fi
