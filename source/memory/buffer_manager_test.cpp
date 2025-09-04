@@ -19,7 +19,7 @@ protected:
     }
 
     void TearDown() override {
-        BufferManager::Builder::getInstance().destroy;
+        BufferManager::Builder::getInstance().~BufferManager();
     }
 };
 

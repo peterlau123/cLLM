@@ -7,7 +7,7 @@ using namespace nova_llm;
 
 class CPUBufferHubTest : public ::testing::Test {
 public:
-    const BufferHub* getBufferHub() const{
+    BufferHub* getBufferHub(){
         return buffer_hub_;
     }
 
@@ -33,36 +33,52 @@ TEST_F(CPUBufferHubTest, Init) {
 }
 
 TEST_F(CPUBufferHubTest, GetBlock) {
-    auto buffer = getBufferHub()->getBlock(1024);
-
-    EXPECT_NE(buffer.data, nullptr);
-    EXPECT_EQ(buffer.size, 1024);
-    EXPECT_EQ(buffer.device_type, DeviceType::CPU);
-
-    getBufferHub()->put(buffer);
-}
-
-TEST_F(CPUBufferHubTest, PutBlock) {
-    auto* block = getBufferHub()->getBlock(1024);
+    auto *block = getBufferHub()->getBlock(Size(1024));
 
     EXPECT_NE(block, nullptr);
     EXPECT_EQ(block->data, nullptr);
+    EXPECT_EQ(block->size, 1024);
+    EXPECT_EQ(block->ref_cnt, 1);
+
+    getBufferHub()->putBlock(block);
+}
+
+TEST_F(CPUBufferHubTest, PutBlock) {
+    auto* block = getBufferHub()->getBlock(Size(1024));
+
+    EXPECT_NE(block, nullptr);
+    EXPECT_NE(block->data, nullptr);
+    EXPECT_EQ(block->size, 1024);
+    EXPECT_EQ(block->ref_cnt, 1);
+
+    getBufferHub()->putBlock(block);
+
+    EXPECT_EQ(block->data, nullptr);
     EXPECT_EQ(block->size, 0);
     EXPECT_EQ(block->ref_cnt, 0);
-
-    getBufferHub()->put(block);
 }
 
 
 TEST_F(CPUBufferHubTest, PutBlockFromBuffer) {
-    auto* buffer = getBufferHub()->getBlock(1024);
+    auto* block = getBufferHub()->getBlock(Size(1024));
 
-    EXPECT_NE(buffer, nullptr);
-    EXPECT_EQ(buffer->data, nullptr);
-    EXPECT_EQ(buffer->totalElements(), 0);
-    EXPECT_EQ(buffer->ref_cnt, 0);
+    EXPECT_NE(block, nullptr);
+    EXPECT_NE(block->data, nullptr);
+    EXPECT_EQ(block->size, 1024);
+    EXPECT_EQ(block->ref_cnt, 1);
 
+    Buffer buffer;
+    buffer.data = block->data;
+    buffer.size = block->size;
+    buffer.device_type = DeviceType::CPU;
     getBufferHub()->putBlockFromBuffer(buffer);
+
+    EXPECT_EQ(block->data, nullptr);
+    EXPECT_EQ(block->size, 0);
+    EXPECT_EQ(block->ref_cnt, 0);
+
+    EXPECT_EQ(buffer.data, nullptr);
+    EXPECT_EQ(buffer.size, 0);
 }
 
 #endif
